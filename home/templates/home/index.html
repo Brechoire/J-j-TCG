@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil — Mon site{% endblock %}
+
+{% block content %}
+<h1>Bienvenue</h1>
+<p>Ceci est la page d'accueil.</p>
+<p>
+  <a href="/collections/">Voir les collections</a> —
+  <a href="/collections/football/">Collection Football</a>
+</p>
+<form method="post" action="/boosters/ouvrir/football/">
+  {% csrf_token %}
+  <button type="submit">Ouvrir un booster gratuit</button>
+</form>
+<p><a href="/albums/football/">Voir mon album Football</a></p>
+{% endblock %}

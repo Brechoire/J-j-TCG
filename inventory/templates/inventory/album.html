@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Album {{ collection.name }}{% endblock %}
+{% block content %}
+<h1>Album {{ collection.name }}</h1>
+<p>{{ data.discovered }}/{{ data.total }} — {{ data.completion_pct }}%</p>
+<form method="get">
+  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Recherche">
+  <select name="rarity"><option value="">Toutes raretés</option><option value="common">Commune</option><option value="uncommon">Peu commune</option><option value="rare">Rare</option><option value="epic">Épique</option><option value="legendary">Légendaire</option></select>
+  <select name="box"><option value="all">Toutes</option><option value="discovered">Découvertes</option><option value="missing">Manquantes</option><option value="duplicates">Doublons</option></select>
+  <button type="submit">Filtrer</button>
+</form>
+<ul>
+{% for row in data.cards %}
+  <li><a href="{% url 'inventory:card-detail' collection.slug row.card.pk %}">{{ row.card.entity }}{% if row.discovered %} x{{ row.quantity }}{% else %} — ?{% endif %}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

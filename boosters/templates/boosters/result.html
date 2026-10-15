@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Booster — {{ opening.collection.name }}{% endblock %}
+{% block content %}
+<h1>Booster {{ opening.collection.name }}</h1>
+<ul>
+{% for oc in cards %}
+  <li>{{ oc.card.entity }} — {{ oc.card.rarity.name }}</li>
+{% endfor %}
+</ul>
+<p><a href="{% url 'boosters:history' %}">Historique</a></p>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ collection.name }}{% endblock %}
+{% block content %}
+<h1>{{ collection.name }}</h1>
+<p>{{ collection.description }}</p>
+<p>{{ total }} cartes</p>
+<form method="post" action="{% url 'boosters:open' collection.slug %}">{% csrf_token %}<button type="submit">Ouvrir un booster gratuit</button></form>
+<p><a href="{% url 'inventory:album' collection.slug %}">Voir l'album</a></p>
+{% endblock %}

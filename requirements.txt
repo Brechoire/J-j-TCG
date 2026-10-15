@@ -1,0 +1,6 @@
+Django==5.2.18
+pytest==8.3.4
+pytest-django==4.9.0
+ruff==0.8.4
+python-dotenv==1.0.1
+requests==2.32.3

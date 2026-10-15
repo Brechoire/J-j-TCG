@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Historique boosters{% endblock %}
+{% block content %}
+<h1>Historique</h1>
+<ul>
+{% for o in openings %}
+  <li><a href="{% url 'boosters:result' o.pk %}">{{ o.collection.name }} — {{ o.created_at }}</a></li>
+{% empty %}
+  <li>Aucune ouverture.</li>
+{% endfor %}
+</ul>
+{% endblock %}

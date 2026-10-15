@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Inscription — WikiCards{% endblock %}
+{% block content %}
+<h1>Inscription</h1>
+<form method="post" novalidate>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Créer mon compte</button>
+</form>
+<p><a href="{% url 'accounts:login' %}">Déjà inscrit ? Connexion</a></p>
+{% endblock %}

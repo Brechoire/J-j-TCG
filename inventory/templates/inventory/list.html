@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Inventaire{% endblock %}
+{% block content %}
+<h1>Inventaire</h1>
+<ul>
+{% for e in entries %}
+  <li>{{ e.card.collection.name }} — {{ e.card.entity }} x{{ e.quantity }}</li>
+{% empty %}<li>Vide.</li>{% endfor %}
+</ul>
+{% endblock %}

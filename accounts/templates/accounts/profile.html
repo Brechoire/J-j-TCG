@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Profil — WikiCards{% endblock %}
+{% block content %}
+<h1>Profil de {{ request.user.username }}</h1>
+<p>Email : {{ request.user.email }}</p>
+<p>Boosters ouverts : {{ profile.total_opened }}</p>
+<p>Cartes uniques : {{ profile.unique_discovered }}</p>
+<p><a href="{% url 'home:index' %}">Retour accueil</a></p>
+{% endblock %}

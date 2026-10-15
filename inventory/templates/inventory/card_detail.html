@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ card.entity }}{% endblock %}
+{% block content %}
+<h1>{{ card.entity }}</h1>
+<p>Rareté : {{ card.rarity.name }}</p>
+<p>Possédée : {{ quantity }} exemplaire(s)</p>
+<p>{{ card.entity.description_fr }}</p>
+{% if card.entity.wikipedia_url_fr %}<p><a href="{{ card.entity.wikipedia_url_fr }}">Wikipédia</a></p>{% endif %}
+{% if card.entity.image_attribution %}<p>{{ card.entity.image_attribution }}</p>{% endif %}
+<p><a href="{% url 'inventory:album' collection.slug %}">Retour album</a></p>
+{% endblock %}
