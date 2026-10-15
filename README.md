@@ -57,24 +57,56 @@ python manage.py runserver
 
 Ouvrez `http://127.0.0.1:8000/` → bouton **Ouvrir un booster gratuit** (collection Football). Connectez-vous d'abord (`/comptes/inscription/`).
 
-## Import Football (100 cartes)
+## Commandes
+
+### Django (manage.py)
 
 ```bash
-python manage.py import_wikidata football --limit 100 --dry-run   # sans réseau écrit rien
-python manage.py import_wikidata football --limit 100
-python manage.py import_wikidata football --qid Q42               # réimport une entité
+python manage.py migrate                    # applique les migrations
+python manage.py makemigrations             # après modification des models
+python manage.py createsuperuser            # compte admin (/admin/)
+python manage.py runserver                  # dev http://127.0.0.1:8000/
+python manage.py check                      # config OK ? (0 issue attendu en dev)
+python manage.py check --deploy             # audit prod (warnings dev attendus, verts via env en prod)
+python manage.py shell                      # console Django
+python manage.py showmigrations             # état des migrations
+```
+
+### Clé secrète + env
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+cp .env.example .env
+```
+
+### Import Wikidata (collection Football)
+
+```bash
+python manage.py import_wikidata football --limit 100 --dry-run   # vérifie sans rien écrire
+python manage.py import_wikidata football --limit 100             # import réel (max 100/run)
+python manage.py import_wikidata football --qid Q42               # réimporte une seule entité
+python manage.py import_wikidata football --limit 10              # petit lot de test
 ```
 
 Robuste : lots de 50, User-Agent identifiable, timeout 10s, backoff ×3, progression tous les 10, reprise partielle, anti-doublons, rareté auto 55/25/12/6/2 (verrous admin préservés).
 
-## Commandes utiles
+### Tests / qualité / CSS
 
 ```bash
-ruff check . && ruff format --check .
-pytest -q
-python manage.py check
-python manage.py check --deploy   # 6 warnings dev attendus (HSTS/cookies/DEBUG) ; verts en prod via env
-pre-commit install
+pytest -q                                     # tous les tests
+pytest home/tests.py -v                       # un module seul
+ruff check . && ruff format --check .         # lint + format (CI)
+npm run build:css                             # rebuild Tailwind
+npm run watch:css                             # watch Tailwind en dev
+pre-commit install                            # hooks (ruff + espaces + yaml)
+```
+
+### Git / GitHub
+
+```bash
+git status --short
+git check-ignore -v .env db.sqlite3 env node_modules
+git add . && git commit -m "feat: ..."
 ```
 
 ## Publier sur GitHub
