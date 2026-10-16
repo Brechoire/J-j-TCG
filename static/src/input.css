@@ -1,3 +1,988 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ============================================================
+   WikiCards — feuille d'entrée Tailwind v4 + design system
+   Tokens : voir docs/DESIGN.md (source de vérité).
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* Sources explicitement scannées (en complément de la
+   détection automatique v4). */
+@source "../../home/templates";
+@source "../../accounts/templates";
+@source "../../collection/templates";
+@source "../../cards/templates";
+@source "../../inventory/templates";
+@source "../../boosters/templates";
+@source "../../design";
+
+/* ------------------------------------------------------------
+   1. Tokens (design system)
+   ------------------------------------------------------------ */
+@theme {
+  /* — Ambiance TCG (sombre immersive, défaut sur tout le site) — */
+  --color-canvas: #070b14;
+  --color-surface: #0f172a;
+  --color-line: #1e293b;          /* séparateurs décoratifs uniquement */
+  --color-line-strong: #5a7091;   /* bordures interactives, >= 3:1 sur surface */
+  --color-ink: #f1f5f9;
+  --color-ink-muted: #94a3b8;
+  --color-ink-subtle: #7d8fa8;
+  --color-accent: #93c5fd;
+  --color-accent-strong: #bfdbfe;
+  --color-accent-tint: #16294d;
+  --color-coin: #fbbf24;
+  --color-coin-bright: #f59e0b;
+  --color-coin-tint: #231a05;
+
+  /* — États — */
+  --color-success: #4ade80;
+  --color-success-tint: #0b2e16;
+  --color-danger: #f87171;
+  --color-danger-tint: #2f1212;
+
+  /* — Ambiance Boost (sombre) — */
+  --color-boost: #070b14;
+  --color-boost-glow: #14203a;
+  --color-boost-surface: #0f172a;
+  --color-boost-surface-2: #1e293b;
+  --color-boost-line: #5a7091;     /* bordures interactives (>= 3:1) */
+  --color-boost-ink: #f1f5f9;
+  --color-boost-ink-muted: #94a3b8;
+  --color-boost-link: #93c5fd;
+
+  /* — Raretés (accent / texte clair / texte sombre / fond teinté) — */
+  --color-common: #64748b;
+  --color-common-ink: #334155;
+  --color-common-ink-dark: #cbd5e1;
+  --color-common-tint: #f1f5f9;
+
+  --color-uncommon: #16a34a;
+  --color-uncommon-ink: #15803d;
+  --color-uncommon-ink-dark: #4ade80;
+  --color-uncommon-tint: #f0fdf4;
+
+  --color-rare: #2563eb;
+  --color-rare-ink: #1d4ed8;
+  --color-rare-ink-dark: #60a5fa;
+  --color-rare-tint: #eff6ff;
+
+  --color-epic: #9333ea;
+  --color-epic-ink: #7e22ce;
+  --color-epic-ink-dark: #c084fc;
+  --color-epic-tint: #faf5ff;
+
+  --color-legendary: #f59e0b;
+  --color-legendary-ink: #b45309;
+  --color-legendary-ink-dark: #fbbf24;
+  --color-legendary-tint: #fffbeb;
+}
+
+/* ------------------------------------------------------------
+   2. Base
+   ------------------------------------------------------------ */
+@layer base {
+  body {
+    background-color: var(--color-canvas);
+    background-image: radial-gradient(120% 70% at 50% 0%, var(--color-boost-glow) 0%, var(--color-canvas) 60%);
+    color: var(--color-ink);
+  }
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ------------------------------------------------------------
+   3. Composants
+   ------------------------------------------------------------ */
+@layer components {
+  /* — Liens — */
+  .link {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .link:hover { color: var(--color-accent-strong); }
+
+  /* — Boutons — */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem; /* cible tactile 44px */
+    padding: 0.625rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease,
+      color 0.15s ease, transform 0.15s ease;
+  }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn--primary {
+    background: var(--color-accent);
+    color: #0f172a;
+  }
+  .btn--primary:hover:not(:disabled) { background: var(--color-accent-strong); }
+
+  .btn--secondary {
+    background: var(--color-boost-surface-2);
+    border-color: var(--color-line-strong);
+    color: var(--color-ink);
+  }
+  .btn--secondary:hover:not(:disabled) { background: #24334b; }
+
+  .btn--ghost { color: var(--color-accent); }
+  .btn--ghost:hover:not(:disabled) { background: var(--color-accent-tint); }
+
+  .btn--lg {
+    min-height: 3.25rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
+  }
+  .btn--block { width: 100%; }
+
+  /* — Surfaces — */
+  .panel {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 8px 28px -18px rgba(0, 0, 0, 0.8);
+  }
+
+  /* — Barre haute — */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  /* — Navigation basse (mobile) — */
+  .bottom-nav {
+    position: fixed;
+    inset-inline: 0;
+    bottom: 0;
+    z-index: 40;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-line);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .bottom-nav__grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+  .bottom-nav__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+    padding: 0.5rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--color-ink-subtle);
+    text-decoration: none;
+  }
+  .bottom-nav__item svg { width: 1.375rem; height: 1.375rem; }
+  .bottom-nav__item[aria-current="page"] {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+  .bottom-nav__item--action { color: var(--color-accent); }
+
+  /* — Portefeuille — */
+  .wallet-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    border: 1px solid color-mix(in srgb, var(--color-coin-bright) 45%, transparent);
+    border-radius: 9999px;
+    background: var(--color-coin-tint);
+    color: var(--color-coin);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .wallet-chip svg { color: var(--color-coin-bright); }
+
+  /* — Badge et pastille de rareté — */
+  .rarity-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid transparent;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.25rem;
+    white-space: nowrap;
+  }
+  .rarity-dot {
+    flex: none;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 9999px;
+    background: var(--badge-accent, currentColor);
+  }
+  .rarity-badge--common { --badge-accent: var(--color-common); background: var(--color-common-tint); color: var(--color-common-ink); border-color: color-mix(in srgb, var(--color-common) 35%, transparent); }
+  .rarity-badge--uncommon { --badge-accent: var(--color-uncommon); background: var(--color-uncommon-tint); color: var(--color-uncommon-ink); border-color: color-mix(in srgb, var(--color-uncommon) 35%, transparent); }
+  .rarity-badge--rare { --badge-accent: var(--color-rare); background: var(--color-rare-tint); color: var(--color-rare-ink); border-color: color-mix(in srgb, var(--color-rare) 35%, transparent); }
+  .rarity-badge--epic { --badge-accent: var(--color-epic); background: var(--color-epic-tint); color: var(--color-epic-ink); border-color: color-mix(in srgb, var(--color-epic) 35%, transparent); }
+  .rarity-badge--legendary { --badge-accent: var(--color-legendary); background: linear-gradient(135deg, var(--color-legendary-tint), #fef3c7); color: var(--color-legendary-ink); border-color: color-mix(in srgb, var(--color-legendary) 45%, transparent); }
+
+  /* — Carte TCG — */
+  .tcg-card {
+    --rarity: var(--color-common);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 63 / 88;
+    overflow: hidden;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.625rem;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    text-align: left;
+  }
+  .tcg-card--uncommon { --rarity: var(--color-uncommon); }
+  .tcg-card--rare { --rarity: var(--color-rare); }
+  .tcg-card--epic {
+    --rarity: var(--color-epic);
+    border-color: color-mix(in srgb, var(--color-epic) 30%, var(--color-line));
+  }
+  .tcg-card--legendary {
+    --rarity: var(--color-legendary);
+    border-color: color-mix(in srgb, var(--color-legendary) 45%, var(--color-line));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-legendary) 25%, transparent),
+      0 6px 18px -8px color-mix(in srgb, var(--color-legendary) 60%, transparent);
+  }
+
+  .tcg-card__ribbon { flex: none; height: 0.3125rem; background: var(--rarity); }
+  .tcg-card--legendary .tcg-card__ribbon {
+    background: linear-gradient(90deg, var(--color-legendary-ink) 0%, var(--color-legendary-ink-dark) 45%, var(--color-legendary) 100%);
+  }
+  .tcg-card--missing .tcg-card__ribbon { background: var(--color-line); }
+
+  .tcg-card__photo {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0.5rem 0.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 0.375rem;
+    background: linear-gradient(160deg, #1e293b, #0f172a);
+  }
+  .tcg-card__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .tcg-card__initial {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #94a3b8;
+    user-select: none;
+  }
+  .tcg-card--missing .tcg-card__photo {
+    background: repeating-linear-gradient(45deg, #141d31 0 8px, #0f172a 8px 16px);
+  }
+  .tcg-card--missing .tcg-card__initial { font-size: 1.75rem; }
+
+  .tcg-card__badge { position: absolute; top: 0.375rem; right: 0.375rem; z-index: 1; }
+
+  .tcg-card__body { padding: 0.5rem 0.625rem 0.625rem; }
+  .tcg-card__name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tcg-card__subtitle {
+    margin-top: 0.125rem;
+    font-size: 0.6875rem;
+    line-height: 1.3;
+    color: var(--color-ink-subtle);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .tcg-card__meta {
+    margin-top: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.375rem;
+  }
+  .tcg-card__number {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-subtle);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Mini carte (grille album) */
+  .tcg-card--xs { border-radius: 0.5rem; }
+  .tcg-card--xs .tcg-card__ribbon { height: 0.25rem; }
+  .tcg-card--xs .tcg-card__photo { margin: 0.375rem 0.375rem 0; }
+  .tcg-card--xs .tcg-card__body { padding: 0.375rem 0.5rem 0.5rem; }
+  .tcg-card--xs .tcg-card__name { font-size: 0.6875rem; }
+  .tcg-card--xs .tcg-card__subtitle { display: none; }
+  .tcg-card--xs .tcg-card__meta { display: none; }
+  .tcg-card--xs .tcg-card__badge { top: 0.25rem; right: 0.25rem; }
+  .tcg-card--xs .rarity-badge { padding: 0 0.375rem; line-height: 1.125rem; }
+  .tcg-card--xs .rarity-badge__label { display: none; }
+
+  /* Variantes d'interaction et d'état */
+  .tcg-card--action { cursor: pointer; transition: border-color 0.15s ease, transform 0.15s ease; }
+  .tcg-card--action:hover { border-color: var(--color-line-strong); }
+  .tcg-card--selected { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+
+  /* Holo (épique / légendaire) */
+  .tcg-card--holo .tcg-card__photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.45) 48%, color-mix(in srgb, var(--rarity) 28%, transparent) 56%, transparent 72%);
+    background-size: 220% 220%;
+    background-position: 15% 15%;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .tcg-card--holo .tcg-card__photo::after {
+      animation: holo-sweep 6s ease-in-out infinite;
+    }
+  }
+  @keyframes holo-sweep {
+    0%, 18% { background-position: 0% 0%; }
+    58%, 100% { background-position: 100% 100%; }
+  }
+
+  /* Dos de carte (révélation) : visuel pack fourni (static/img/pack-football-legends.jpg),
+     optimisé depuis media/. Halo lumineux conservé (voir .reveal-slot--* plus bas). */
+  .tcg-card--back {
+    background-color: #0e162b;
+    background-image: url("../img/pack-football-legends.jpg");
+    background-size: cover;
+    background-position: center;
+    border-color: #33456b;
+    align-items: center;
+    justify-content: center;
+  }
+  .tcg-card--back .tcg-card__back-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: #93a9cc;
+  }
+  .tcg-card--back .tcg-card__back-mark strong {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b9c9e2;
+  }
+
+  /* — Progression — */
+  .progress {
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-line);
+    overflow: hidden;
+  }
+  .progress__bar {
+    height: 100%;
+    border-radius: 9999px;
+    background: var(--color-accent);
+    transition: width 0.3s ease;
+  }
+
+  /* — Chips de filtre — */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.25rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 9999px;
+    background: var(--color-surface);
+    color: var(--color-ink-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip:hover { background: var(--color-canvas); }
+  .chip--active {
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+    color: #fff;
+  }
+  .chip--active:hover { background: #1d4ed8; }
+
+  /* — Formulaires — */
+  .field { display: flex; flex-direction: column; gap: 0.375rem; }
+  .field__label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .field__input {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.5rem;
+    background: var(--color-surface);
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+  }
+  .field__input::placeholder { color: var(--color-ink-subtle); }
+  .field__input:focus { border-color: var(--color-accent); }
+  .field__help { font-size: 0.75rem; color: var(--color-ink-subtle); }
+  .field--error .field__input { border-color: var(--color-danger); }
+  .field__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-danger);
+  }
+  .field__error svg { margin-top: 0.125rem; }
+
+  /* — Messages — */
+  .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .alert svg { flex: none; margin-top: 0.125rem; }
+  .alert--error {
+    background: var(--color-danger-tint);
+    border-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
+    color: var(--color-danger);
+  }
+  .alert--success {
+    background: var(--color-success-tint);
+    border-color: color-mix(in srgb, var(--color-success) 30%, transparent);
+    color: var(--color-success);
+  }
+  .alert--info {
+    background: var(--color-accent-tint);
+    border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    color: var(--color-accent-strong);
+  }
+
+  /* — États vides — */
+  .empty-state {
+    padding: 2rem 1rem;
+    border: 1px dashed var(--color-line-strong);
+    border-radius: 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-ink-subtle);
+  }
+  .empty-state strong { color: var(--color-ink); }
+
+  /* — Statistiques — */
+  .stat { display: flex; flex-direction: column; gap: 0.125rem; }
+  .stat__value {
+    font-size: 1.375rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat__label {
+    font-size: 0.75rem;
+    color: var(--color-ink-subtle);
+  }
+
+  /* — Révélation de booster — */
+  /* Visibilité conditionnée à la présence de JS (progressive enhancement). */
+  .js-only { display: none; }
+  html.js .js-only { display: block; }
+  .no-js-only { display: block; }
+  html.js .no-js-only { display: none; }
+
+  .reveal-deck { display: grid; gap: 1rem; }
+  .reveal-slot {
+    position: relative;
+    aspect-ratio: 63 / 88;
+  }
+  .reveal-back,
+  .reveal-face { position: absolute; inset: 0; }
+  .reveal-face .tcg-card { height: 100%; }
+
+  /* En mode séquence, la pile est contenue (une carte à la fois) */
+  .reveal-deck[data-phase="seq"] [data-reveal-slot] {
+    width: min(16rem, 72vw);
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  /* Mode séquence (JS actif) : une carte à la fois */
+  html.js .reveal-deck[data-phase="seq"] [data-reveal-slot] { display: none; }
+  html.js .reveal-deck[data-phase="seq"] [data-reveal-slot][data-current="true"] {
+    display: block;
+  }
+  html.js .reveal-slot[data-state="hidden"] .reveal-face { opacity: 0; visibility: hidden; }
+  html.js .reveal-slot[data-state="revealed"] .reveal-back { opacity: 0; visibility: hidden; }
+
+  /* — Ouverture du sachet (avant la séquence) —
+     L'intro n'existe qu'avec JS : sans JS, le deck reste visible d'emblée.
+     Tant que la racine n'a pas [data-opened], deck et contrôles restent
+     masqués ; après ouverture, c'est l'intro qui disparaît. */
+  html.js [data-reveal-root]:not([data-opened]) [data-reveal-deck],
+  html.js [data-reveal-root]:not([data-opened]) [data-reveal-controls] { display: none; }
+  html.js [data-reveal-root][data-opened] [data-pack-intro] { display: none; }
+
+  .pack-open__scene {
+    position: relative;
+    width: min(15rem, 68vw);
+    margin-inline: auto;
+  }
+  .pack-open__sachet {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow:
+      0 0 0 1px rgba(147, 197, 253, 0.55),
+      0 0 28px -4px rgba(147, 197, 253, 0.55),
+      0 18px 44px -18px rgba(0, 0, 0, 0.85);
+  }
+  .pack-open__flash {
+    position: absolute;
+    inset: -12%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95), rgba(147, 197, 253, 0.5) 45%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pack-open__scene.is-tearing .pack-open__sachet {
+      animation: pack-shake 0.45s ease-in-out 2, pack-tear 0.55s ease-in 0.9s forwards;
+    }
+    .pack-open__scene.is-tearing .pack-open__flash {
+      animation: pack-flash 0.6s ease-out 0.9s forwards;
+    }
+  }
+  @keyframes pack-shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-2deg) translateY(-3px); }
+    75% { transform: rotate(2deg) translateY(2px); }
+  }
+  @keyframes pack-tear {
+    to { transform: scale(1.07); opacity: 0; filter: brightness(2.2); }
+  }
+  @keyframes pack-flash {
+    0% { opacity: 0; transform: scale(0.4); }
+    30% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.4); }
+  }
+
+  /* Mode récapitulatif : grille compacte, cartes toutes identiques.
+     Les slots redeviennent des items de grille normaux (plus de
+     superposition absolue) et s'étirent à la même hauteur par rangée. */
+  .reveal-deck[data-phase="all"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  @media (min-width: 640px) {
+    .reveal-deck[data-phase="all"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  .reveal-deck[data-phase="all"] .reveal-slot { aspect-ratio: auto; }
+  .reveal-deck[data-phase="all"] .reveal-back { display: none; }
+  .reveal-deck[data-phase="all"] .reveal-face { position: static; display: flex; }
+  /* min-width:0 : la carte est un item flex ; sans cela, le minimum
+     automatique (texte d'attribution nowrap) l'empêche de rétrécir à sa
+     cellule et les cartes se chevauchent. */
+  .reveal-deck[data-phase="all"] .reveal-face .pk-card { flex: 1; height: auto; min-width: 0; }
+
+  /* Dos : le visuel pack reste fixe jusqu'au clic (aucun teaser par-dessus). */
+  .reveal-back { overflow: hidden; }
+  .reveal-back::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 11, 20, 0.45), rgba(7, 11, 20, 0.72));
+    pointer-events: none;
+  }
+
+  /* Halo lumineux couleur rareté sur le dos à révéler (teaser d'ouverture).
+     Volontairement sans turbulence SVG animée (trop coûteuse sur mobile) :
+     anneau flouté + ombres, pulsation d'opacité seule (peu coûteuse). */
+  .reveal-slot--common { --halo: var(--color-common); }
+  .reveal-slot--uncommon { --halo: var(--color-uncommon); }
+  .reveal-slot--rare { --halo: var(--color-rare); }
+  .reveal-slot--epic { --halo: var(--color-epic); }
+  .reveal-slot--legendary { --halo: var(--color-legendary); }
+
+  html.js .reveal-deck[data-phase="seq"] .reveal-slot[data-state="hidden"] .reveal-back {
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--halo) 65%, transparent),
+      0 0 22px -2px color-mix(in srgb, var(--halo) 55%, transparent),
+      0 0 64px -8px color-mix(in srgb, var(--halo) 40%, transparent);
+  }
+  html.js .reveal-deck[data-phase="seq"] .reveal-slot[data-state="hidden"]::before {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 1rem;
+    border: 2px solid color-mix(in srgb, var(--halo) 80%, transparent);
+    filter: blur(6px);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .reveal-deck[data-phase="seq"] .reveal-slot[data-state="hidden"]::before {
+      animation: halo-breathe 2.4s ease-in-out infinite;
+    }
+  }
+  @keyframes halo-breathe {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.95; }
+  }
+
+  /* Bande « déjà révélées » pendant la séquence : historique des cartes trouvées */
+  .reveal-found-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .reveal-found-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 0;
+    text-align: center;
+  }
+  .reveal-found-thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    border: 1px solid var(--color-line);
+    background: linear-gradient(160deg, #eef3f9, #cbd5e1);
+    font-weight: 800;
+    color: #64748b;
+  }
+  .reveal-found-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .reveal-found-label {
+    font-size: 0.625rem;
+    line-height: 1.25;
+    color: var(--color-ink-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-back,
+    .reveal-face { transition: opacity 0.4s ease, transform 0.4s ease; }
+    html.js .reveal-slot[data-state="hidden"] .reveal-face { transform: translateY(10px) scale(0.95); }
+    html.js .reveal-slot[data-state="revealed"] .tcg-card--legendary,
+    html.js .reveal-slot[data-state="revealed"] .pk-card--legendary {
+      animation: legendary-pulse 1.4s ease-out 0.35s 1;
+    }
+  }
+  @keyframes legendary-pulse {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-legendary) 55%, transparent); }
+    100% { box-shadow: 0 0 0 26px transparent; }
+  }
+
+  /* — Carte TCG WikiCards (anatomie originale inspirée TCG) — */
+  .pk-card {
+    --pk-frame: #cbd5e1;
+    --pk-edge: var(--color-common);
+    --pk-ink: var(--color-ink);
+    position: relative;
+    aspect-ratio: 63 / 88;
+    border-radius: 0.875rem;
+    padding: 0.375rem;
+    background: var(--pk-frame);
+    box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7);
+  }
+  .pk-card--common { --pk-frame: linear-gradient(150deg, #8fa1b8 0%, #3c4a61 60%, #232d40 100%); --pk-edge: #475569; }
+  .pk-card--uncommon { --pk-frame: linear-gradient(150deg, #6ee7a8 0%, #15803d 60%, #0b2e1a 100%); --pk-edge: var(--color-uncommon); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 18px -6px rgba(34, 197, 94, 0.45); }
+  .pk-card--rare { --pk-frame: linear-gradient(150deg, #7db4fb 0%, #1d4ed8 60%, #16294d 100%); --pk-edge: var(--color-rare); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 18px -6px rgba(59, 130, 246, 0.5); }
+  .pk-card--epic { --pk-frame: linear-gradient(150deg, #c99afc 0%, #7e22ce 60%, #2e1065 100%); --pk-edge: var(--color-epic); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 18px -6px rgba(168, 85, 247, 0.5); }
+  .pk-card--legendary { --pk-frame: linear-gradient(150deg, #92400e 0%, #f59e0b 30%, #fde68a 50%, #f59e0b 70%, #92400e 100%); --pk-edge: var(--color-legendary-ink); }
+  .pk-card--missing { --pk-frame: linear-gradient(160deg, #334155, #0f172a); }
+
+  .pk-card__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.625rem;
+    color: #0f172a; /* la carte reste un objet clair posé sur la table sombre */
+    background:
+      repeating-linear-gradient(0deg, rgba(15, 23, 42, 0.025) 0 2px, transparent 2px 4px),
+      linear-gradient(170deg, #fffef8 0%, #fdf6e3 55%, #f5ecd4 100%);
+    transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 0.15s ease;
+  }
+  .pk-card.is-tilting .pk-card__inner { transition: transform 0.06s linear; }
+
+  .pk-card__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    padding: 0.375rem 0.5rem 0.25rem;
+  }
+  .pk-card__stage {
+    flex: none;
+    border: 1px solid var(--pk-edge);
+    border-radius: 9999px;
+    padding: 0 0.375rem;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--pk-edge);
+    background: rgba(255, 255, 255, 0.6);
+  }
+  .pk-card__name {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+  .pk-card__hp {
+    flex: none;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    color: #b91c1c;
+  }
+  .pk-card__hp-label {
+    font-size: 0.5625rem;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  .pk-card__art {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0 0.5rem;
+    overflow: hidden;
+    border: 2px solid var(--pk-edge);
+    border-radius: 0.375rem;
+    background: linear-gradient(160deg, #eef3f9, #cbd5e1);
+    box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.25);
+  }
+  .pk-card__art > img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .pk-card__art-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #94a3b8;
+    user-select: none;
+  }
+  /* Repli sans photo (carte possédée) : zone et monogramme teintés par
+     rareté, plus élégants que le gris uni. Exclut les silhouettes
+     « À découvrir » (.pk-card--missing) qui doivent rester neutres. */
+  .pk-card--common:not(.pk-card--missing) .pk-card__art { background: var(--color-common-tint); }
+  .pk-card--uncommon:not(.pk-card--missing) .pk-card__art { background: var(--color-uncommon-tint); }
+  .pk-card--rare:not(.pk-card--missing) .pk-card__art { background: var(--color-rare-tint); }
+  .pk-card--epic:not(.pk-card--missing) .pk-card__art { background: var(--color-epic-tint); }
+  .pk-card--legendary:not(.pk-card--missing) .pk-card__art { background: var(--color-legendary-tint); }
+  .pk-card--common:not(.pk-card--missing) .pk-card__art-placeholder { color: var(--color-common-ink); }
+  .pk-card--uncommon:not(.pk-card--missing) .pk-card__art-placeholder { color: var(--color-uncommon-ink); }
+  .pk-card--rare:not(.pk-card--missing) .pk-card__art-placeholder { color: var(--color-rare-ink); }
+  .pk-card--epic:not(.pk-card--missing) .pk-card__art-placeholder { color: var(--color-epic-ink); }
+  .pk-card--legendary:not(.pk-card--missing) .pk-card__art-placeholder { color: var(--color-legendary-ink); }
+  .pk-card--missing .pk-card__art { border-style: dashed; }
+  .pk-card__rarity {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    border-radius: 9999px;
+    background: rgba(15, 23, 42, 0.82);
+    color: #fff;
+    padding: 0.0625rem 0.4375rem;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .pk-card__flag {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    border-radius: 9999px;
+    background: #0f172a;
+    color: #fff;
+    padding: 0.0625rem 0.4375rem;
+    font-size: 0.5625rem;
+    font-weight: 700;
+  }
+  .pk-card__flag--new { background: #15803d; }
+  .pk-card__art-caption {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #e2e8f0, #94a3b8);
+    border-top: 1px solid rgba(15, 23, 42, 0.35);
+    padding: 0.0625rem 0.375rem;
+    font-size: 0.5625rem;
+    font-weight: 600;
+    color: #0f172a;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pk-card__flag-img {
+    display: inline-block;
+    height: 1em;
+    width: auto;
+    border-radius: 2px;
+    vertical-align: -0.12em;
+    margin-right: 0.2em;
+  }
+
+  .pk-card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.375rem;
+    margin: auto 0.5rem 0.125rem;
+    padding-top: 0.25rem;
+    font-size: 0.5625rem;
+    font-weight: 700;
+    color: #475569;
+  }
+  .pk-card__num { font-variant-numeric: tabular-nums; }
+  .pk-card__attr {
+    margin: 0 0.5rem 0.375rem;
+    font-size: 0.5rem;
+    line-height: 1.3;
+    color: #64748b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pk-card__holo,
+  .pk-card__glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .pk-card__holo {
+    opacity: 0.55;
+    background:
+      linear-gradient(
+        115deg,
+        transparent 25%,
+        rgba(255, 0, 128, 0.16) 38%,
+        rgba(0, 200, 255, 0.16) 50%,
+        rgba(255, 230, 0, 0.2) 62%,
+        transparent 78%
+      );
+    background-size: 250% 250%;
+    background-position: var(--mx, 50%) var(--my, 50%);
+    mix-blend-mode: overlay;
+  }
+  .pk-card__glare {
+    opacity: 0;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.12) 28%,
+      transparent 60%
+    );
+    transition: opacity 0.15s ease;
+  }
+  .pk-card.is-tilting .pk-card__holo { opacity: 0.9; }
+  .pk-card.is-tilting .pk-card__glare { opacity: 1; }
+
+  /* Mini carte (grilles) */
+  .pk-card--xs { border-radius: 0.625rem; padding: 0.25rem; }
+  .pk-card--xs .pk-card__inner { border-radius: 0.5rem; }
+  .pk-card--xs .pk-card__head { padding: 0.25rem 0.375rem 0.125rem; }
+  .pk-card--xs .pk-card__name { font-size: 0.625rem; }
+  .pk-card--xs .pk-card__hp { font-size: 0.5625rem; }
+  .pk-card--xs .pk-card__art { margin: 0 0.375rem; }
+  .pk-card--xs .pk-card__attr { display: none; }
+  .pk-card--xs .pk-card__foot { margin-inline: 0.375rem; }
+
+  .pk-card-link {
+    display: block;
+    border-radius: 0.875rem;
+    text-decoration: none;
+    color: inherit;
+  }
+  .pk-card-link:hover .pk-card { box-shadow: 0 4px 14px -6px rgba(15, 23, 42, 0.45); }
+
+  .reveal-face .pk-card { height: 100%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pk-card__inner { transform: none !important; transition: none; }
+    .pk-card__holo { opacity: 0.35; }
+    .pk-card__glare { display: none; }
+  }
+}

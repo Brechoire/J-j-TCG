@@ -1,12 +1,79 @@
 {% extends "base.html" %}
-{% block title %}Historique boosters{% endblock %}
+{% block title %}Tirages — Jéjé-TCG{% endblock %}
 {% block content %}
-<h1>Historique</h1>
-<ul>
-{% for o in openings %}
-  <li><a href="{% url 'boosters:result' o.pk %}">{{ o.collection.name }} — {{ o.created_at }}</a></li>
-{% empty %}
-  <li>Aucune ouverture.</li>
-{% endfor %}
-</ul>
+<header class="mb-5">
+  <p class="text-xs font-semibold uppercase tracking-widest text-ink-subtle">Boosters</p>
+  <h1 class="mt-1 text-2xl font-extrabold tracking-tight">Tirages</h1>
+  <p class="mt-1 text-sm text-ink-muted">Vos boosters ouverts, du plus récent au plus ancien.</p>
+  {% if total_openings %}
+  <p class="mt-2 text-xs text-ink-subtle">{{ total_openings }} booster{{ total_openings|pluralize }} ouvert{{ total_openings|pluralize }}</p>
+  {% endif %}
+</header>
+
+{% if rows %}
+<ol class="space-y-3">
+  {% for row in rows %}
+  {% with op=row.opening %}
+  <li class="panel" aria-labelledby="tirage-{{ op.pk }}">
+    <div class="flex items-center justify-between gap-3">
+      <div class="min-w-0">
+        <h2 id="tirage-{{ op.pk }}" class="text-sm font-bold">Booster {{ op.collection.name }}{% if op.pack %} · {{ op.pack.name }}{% endif %}</h2>
+        <p class="text-xs text-ink-subtle">{{ op.created_at|date:"DATETIME_FORMAT" }} · {{ row.new_count }} nouvelle{{ row.new_count|pluralize:"s" }}, {{ row.dup_count }} doublon{{ row.dup_count|pluralize:"s" }}</p>
+      </div>
+      <div class="flex shrink-0 gap-1" aria-hidden="true">
+        {% for oc in row.cards %}
+        <span class="h-6 w-[18px] rounded border border-{{ oc.card.rarity.code|default:"common" }} bg-{{ oc.card.rarity.code|default:"common" }}-tint"></span>
+        {% endfor %}
+      </div>
+    </div>
+    <details class="group mt-2"{% if forloop.first and page_obj.number == 1 %} open{% endif %}>
+      <summary class="inline-flex cursor-pointer items-center gap-1 text-sm font-semibold text-accent">
+        <svg class="h-4 w-4 transition-transform group-open:rotate-90" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5.5 6.5 6.5L9 18.5"/></svg>
+        Revoir les 5 cartes
+      </summary>
+      <div class="mt-3 grid grid-cols-3 gap-2 sm:grid-cols-5">
+        {% for oc in row.cards %}
+        <a href="{% url 'inventory:card-detail' op.collection.slug oc.card.pk %}" class="pk-card-link" aria-label="{{ oc.card.entity.label_fr }}, {{ oc.card.rarity.name }}{% if oc.is_new %}, nouvelle carte{% else %}, doublon quantité {{ oc.quantity }}{% endif %}">
+          {% if oc.is_new %}
+            {% include "cards/_pk_card.html" with card=oc.card quantity=oc.quantity discovered=True badge="new" size="xs" number=forloop.counter total=5 %}
+          {% else %}
+            {% include "cards/_pk_card.html" with card=oc.card quantity=oc.quantity discovered=True badge="dup" size="xs" number=forloop.counter total=5 %}
+          {% endif %}
+        </a>
+        {% endfor %}
+      </div>
+      <p class="mt-3 text-center text-sm"><a class="link" href="{% url 'boosters:result' op.pk %}">Revoir la révélation</a></p>
+    </details>
+  </li>
+  {% endwith %}
+  {% endfor %}
+</ol>
+
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="mt-5 flex items-center justify-between gap-3" aria-label="Pagination des tirages">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}" class="btn btn--secondary">Précédent</a>
+  {% else %}
+  <button type="button" class="btn btn--secondary" disabled>Précédent</button>
+  {% endif %}
+  <p class="text-sm text-ink-muted">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</p>
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}" class="btn btn--secondary">Suivant</a>
+  {% else %}
+  <button type="button" class="btn btn--secondary" disabled>Suivant</button>
+  {% endif %}
+</nav>
+{% endif %}
+{% else %}
+<div class="empty-state">
+  <p><strong>Aucun tirage pour le moment.</strong></p>
+  <p class="mt-1">Ouvrez un booster pour commencer la collection — 5 cartes à chaque fois.</p>
+  <p class="mt-4 flex flex-col gap-2 sm:flex-row sm:justify-center">
+    {% if collection %}
+    <a href="{% url 'collection:detail' collection.slug %}" class="btn btn--primary">Ouvrir un booster</a>
+    {% endif %}
+    <a href="{% url 'collection:list' %}" class="btn btn--secondary">Voir les collections</a>
+  </p>
+</div>
+{% endif %}
 {% endblock %}

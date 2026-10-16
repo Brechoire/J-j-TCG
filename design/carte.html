@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marta — WikiCards (maquette)</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink pb-24 md:pb-10">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+
+<header class="top-bar">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+    <a href="index.html" class="text-lg font-extrabold tracking-tight">WikiCards</a>
+    <div class="flex items-center gap-2">
+      <a href="boutique.html" class="wallet-chip" aria-label="Portefeuille : 1 240 crédits">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+        <span>1 240</span>
+      </a>
+      <nav class="hidden items-center gap-1 text-sm md:flex" aria-label="Navigation principale">
+        <a href="collections.html" class="rounded-lg px-3 py-2 font-semibold text-ink" aria-current="page">Collections</a>
+        <a href="booster-historique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Tirages</a>
+        <a href="boutique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Boutique</a>
+        <a href="profil.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Profil</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="contenu" class="mx-auto w-full max-w-3xl px-4 py-6">
+  <a href="album.html" class="inline-flex items-center gap-1 text-sm font-semibold text-accent">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg>
+    Album Football
+  </a>
+
+  <div class="mt-4 grid gap-6 sm:grid-cols-[18rem_1fr] sm:items-start">
+    <!-- Grande carte (décorative : les informations sont dans le texte à droite) -->
+    <div class="mx-auto w-full max-w-xs" aria-hidden="true">
+      <div class="tcg-card tcg-card--legendary tcg-card--holo">
+        <div class="tcg-card__ribbon"></div>
+        <div class="tcg-card__photo">
+          <span class="tcg-card__initial">M</span>
+          <span class="rarity-badge rarity-badge--legendary tcg-card__badge"><span class="rarity-dot"></span><span class="rarity-badge__label">Légendaire</span></span>
+        </div>
+        <div class="tcg-card__body">
+          <p class="tcg-card__name">Marta</p>
+          <p class="tcg-card__subtitle">Attaquante · Brésil</p>
+          <div class="tcg-card__meta">
+            <span class="tcg-card__number">N° 003/100</span>
+            <span class="tcg-card__number">×1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Informations -->
+    <div>
+      <div class="flex flex-wrap items-center gap-2">
+        <h1 class="text-2xl font-extrabold tracking-tight">Marta</h1>
+        <span class="rarity-badge rarity-badge--legendary"><span class="rarity-dot" aria-hidden="true"></span>Légendaire</span>
+      </div>
+      <p class="mt-1 text-sm text-ink-muted">Attaquante · Brésil</p>
+
+      <dl class="mt-5 divide-y divide-line text-sm">
+        <div class="flex justify-between gap-3 py-2.5">
+          <dt class="text-ink-muted">Popularité encyclopédique</dt>
+          <dd class="font-semibold tabular-nums">1 214 <span class="font-normal text-ink-subtle">/ score</span></dd>
+        </div>
+        <div class="flex justify-between gap-3 py-2.5">
+          <dt class="text-ink-muted">Score mesuré sur</dt>
+          <dd class="text-right font-medium">pages vues Wikipédia (60 j) + complétude</dd>
+        </div>
+        <div class="flex justify-between gap-3 py-2.5">
+          <dt class="text-ink-muted">Catalogue</dt>
+          <dd class="font-semibold tabular-nums">N° 003 / 100</dd>
+        </div>
+        <div class="flex justify-between gap-3 py-2.5">
+          <dt class="text-ink-muted">Dans votre collection</dt>
+          <dd class="font-semibold">1 exemplaire</dd>
+        </div>
+      </dl>
+
+      <!-- Vente -->
+      <section class="panel mt-5" aria-labelledby="vente-t">
+        <h2 id="vente-t" class="text-sm font-bold">Revente</h2>
+        <p class="mt-1 text-sm text-ink-muted">Vous ne possédez qu'un exemplaire : la revente démarre à partir de 2 (1 est toujours conservé).</p>
+        <button type="button" class="btn btn--secondary mt-3" disabled>Revendre un doublon</button>
+      </section>
+
+      <!-- Attributions -->
+      <section class="mt-5 text-xs text-ink-subtle" aria-labelledby="attr-t">
+        <h2 id="attr-t" class="sr-only">Sources et attributions</h2>
+        <p>Image : Wikimedia Commons — CC BY-SA 4.0 — crédit auteur. <a class="link" href="#">Détail de la licence</a></p>
+        <p class="mt-1">Sources : <a class="link" href="#">Wikipédia FR</a> · <a class="link" href="#">Wikidata (Q…)</a> · importée le 2 octobre 2026.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<footer class="mx-auto max-w-3xl px-4 pb-6 pt-4 text-xs text-ink-subtle">
+  <p>Maquette statique WikiCards — données factices. Les photos réelles proviendront de Wikimedia Commons avec attribution.</p>
+</footer>
+
+<nav class="bottom-nav md:hidden" aria-label="Navigation principale">
+  <div class="bottom-nav__grid">
+    <a href="accueil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V20h13V9.75"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="collections.html" class="bottom-nav__item" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+      <span>Collections</span>
+    </a>
+    <a href="booster-ouverture.html" class="bottom-nav__item bottom-nav__item--action">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5 4.5 13.5h6.1L9.5 21.5 18 10.5h-6.1Z"/></svg>
+      <span>Booster</span>
+    </a>
+    <a href="inventaire.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+      <span>Doublons</span>
+    </a>
+    <a href="profil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20c.9-3.3 3.7-5.2 7-5.2s6.1 1.9 7 5.2"/></svg>
+      <span>Profil</span>
+    </a>
+  </div>
+</nav>
+</body>
+</html>

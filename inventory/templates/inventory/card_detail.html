@@ -1,11 +1,74 @@
 {% extends "base.html" %}
-{% block title %}{{ card.entity }}{% endblock %}
+{% load cards_extras %}
+{% block title %}{{ card.entity.label_fr }} — {{ collection.name }}{% endblock %}
 {% block content %}
-<h1>{{ card.entity }}</h1>
-<p>Rareté : {{ card.rarity.name }}</p>
-<p>Possédée : {{ quantity }} exemplaire(s)</p>
-<p>{{ card.entity.description_fr }}</p>
-{% if card.entity.wikipedia_url_fr %}<p><a href="{{ card.entity.wikipedia_url_fr }}">Wikipédia</a></p>{% endif %}
-{% if card.entity.image_attribution %}<p>{{ card.entity.image_attribution }}</p>{% endif %}
-<p><a href="{% url 'inventory:album' collection.slug %}">Retour album</a></p>
+<a href="{% url 'inventory:album' collection.slug %}" class="link text-sm">← Album {{ collection.name }}</a>
+<div class="mt-4 grid gap-6 sm:grid-cols-[18rem_1fr] sm:items-start">
+  <div class="mx-auto w-full max-w-xs">
+    {% if quantity > 0 %}
+      {% include "cards/_pk_card.html" with card=card quantity=quantity discovered=True number=card.pk total="" %}
+    {% else %}
+      {% include "cards/_pk_card.html" with card=card quantity=0 discovered=False number=card.pk total="" %}
+    {% endif %}
+  </div>
+  <div>
+    <div class="flex flex-wrap items-center gap-2">
+      <h1 class="text-2xl font-extrabold tracking-tight">{% if quantity > 0 %}{{ card.entity.label_fr }}{% else %}Carte à découvrir{% endif %}</h1>
+      <span class="rarity-badge rarity-badge--{{ card.rarity.code|default:"common" }}"><span class="rarity-dot" aria-hidden="true"></span>{{ card.rarity.name }}</span>
+    </div>
+    <p class="mt-1 text-sm text-ink-muted">
+      {% with nat=card.entity.props.nationality pos=card.entity.props.position capa=card.entity.props.capacity lieu=card.entity.props.location %}
+        {% if nat and not nat|is_qid %}{% with flag_url=nat|flag_img_url %}{% if flag_url %}<img class="pk-card__flag-img" src="{{ flag_url }}" alt="" loading="lazy" onerror="this.remove()">{% endif %}{% endwith %} {{ nat }}{% if pos and not pos|is_qid %} · {{ pos }}{% endif %}{% elif pos and not pos|is_qid %}{{ pos }}{% elif capa or lieu %}{% if capa %}{{ capa }} places{% endif %}{% if capa and lieu %} · {% endif %}{% if lieu %}{{ lieu }}{% endif %}{% else %}Football{% endif %}
+      {% endwith %}
+    </p>
+    <dl class="mt-5 divide-y divide-line text-sm">
+      <div class="flex justify-between gap-3 py-2.5">
+        <dt class="text-ink-muted">Popularité encyclopédique</dt>
+        <dd class="font-semibold tabular-nums">{% if card.auto_score %}{{ card.auto_score|floatformat:0 }}{% else %}—{% endif %}</dd>
+      </div>
+      <div class="flex justify-between gap-3 py-2.5">
+        <dt class="text-ink-muted">Dans votre collection</dt>
+        <dd class="font-semibold">{% if quantity > 0 %}{{ quantity }} exemplaire(s){% else %}Non possédée{% endif %}</dd>
+      </div>
+      <div class="flex justify-between gap-3 py-2.5">
+        <dt class="text-ink-muted">Valeur de revente</dt>
+        <dd class="font-semibold text-coin">{{ card.effective_sale_value }} crédits</dd>
+      </div>
+    </dl>
+    {% if quantity > 0 %}
+      <p class="mt-3 text-sm text-ink-muted">{{ card.entity.description_fr|default:"Fiche Wikipédia / Wikidata en cours d'enrichissement." }}</p>
+    {% else %}
+      <div class="alert alert--info mt-4" role="note">
+        <p>Carte non possédée — ouvrez des boosters {{ collection.name }} pour la révéler. Son identité restera masquée ici tant qu'elle n'est pas découverte.</p>
+      </div>
+    {% endif %}
+    {% if packs %}
+    <section class="panel mt-5" aria-label="Packs contenant cette carte">
+      <h2 class="text-sm font-bold">Packs</h2>
+      <p class="mt-1 text-sm text-ink-muted">Cette carte peut sortir des boosters :</p>
+      <ul class="mt-2 flex flex-wrap gap-2">
+        {% for pack in packs %}
+        <li><a href="{% url 'collection:detail' collection.slug %}?pack={{ pack.slug }}" class="chip">{{ pack.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endif %}
+    <section class="panel mt-5" aria-label="Revente">
+      <h2 class="text-sm font-bold">Revente</h2>
+      {% if quantity > 1 %}
+        <p class="mt-1 text-sm text-ink-muted">Vous pouvez revendre jusqu'à {{ quantity|add:"-1" }} exemplaire(s) — 1 est toujours conservé.</p>
+        <a href="{% url 'inventory:list' %}" class="btn btn--secondary mt-3">Aller aux doublons</a>
+      {% else %}
+        <p class="mt-1 text-sm text-ink-muted">Revente possible à partir de 2 exemplaires (1 conservé).</p>
+        <button type="button" class="btn btn--secondary mt-3" disabled>Revendre un doublon</button>
+      {% endif %}
+    </section>
+    {% if quantity > 0 %}
+    <section class="mt-5 text-xs text-ink-subtle" aria-label="Sources et attributions">
+      {% if card.entity.image_attribution %}<p>Image : {{ card.entity.image_attribution }}</p>{% endif %}
+      {% if card.entity.wikipedia_url_fr %}<p class="mt-1">Source : <a class="link" href="{{ card.entity.wikipedia_url_fr }}">Wikipédia FR</a>{% if card.entity.wikidata_id %} · Wikidata ({{ card.entity.wikidata_id }}){% endif %}</p>{% endif %}
+    </section>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

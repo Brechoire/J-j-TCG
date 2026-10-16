@@ -1,5 +1,5 @@
 """
-Django settings for app project (WikiCards MVP).
+Django settings for app project (Jéjé-TCG).
 
 For more information on this file, see
 https://docs.djangoproject.com/en/5.2/topics/settings/

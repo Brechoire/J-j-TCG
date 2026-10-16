@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revendre un doublon — WikiCards (maquette)</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink pb-24 md:pb-10">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+
+<header class="top-bar">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+    <a href="index.html" class="text-lg font-extrabold tracking-tight">WikiCards</a>
+    <div class="flex items-center gap-2">
+      <a href="boutique.html" class="wallet-chip" aria-label="Portefeuille : 1 240 crédits">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+        <span>1 240</span>
+      </a>
+      <nav class="hidden items-center gap-1 text-sm md:flex" aria-label="Navigation principale">
+        <a href="collections.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Collections</a>
+        <a href="booster-historique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Tirages</a>
+        <a href="boutique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Boutique</a>
+        <a href="profil.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Profil</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="contenu" class="mx-auto w-full max-w-md px-4 py-6">
+  <a href="inventaire.html" class="inline-flex items-center gap-1 text-sm font-semibold text-accent">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg>
+    Mes doublons
+  </a>
+  <h1 class="mt-2 text-2xl font-extrabold tracking-tight">Revendre un doublon</h1>
+
+  <p class="mt-6 text-xs font-semibold uppercase tracking-widest text-ink-subtle">Formulaire</p>
+  <section class="panel mt-2" aria-labelledby="vente-t">
+    <h2 id="vente-t" class="sr-only">Détail de la vente</h2>
+    <div class="flex items-center gap-3">
+      <div class="w-14 shrink-0" aria-hidden="true">
+        <div class="tcg-card tcg-card--xs tcg-card--uncommon">
+          <div class="tcg-card__ribbon"></div>
+          <div class="tcg-card__photo"><span class="tcg-card__initial text-[10px]">RM</span></div>
+        </div>
+      </div>
+      <div>
+        <p class="font-bold">Riyad Mahrez</p>
+        <p class="text-xs text-ink-subtle">Peu commune · vous en possédez 3, 1 sera conservé.</p>
+      </div>
+    </div>
+
+    <div class="mt-5">
+      <p class="field__label" id="qte-label">Quantité à vendre</p>
+      <div class="mt-2 flex items-center gap-3" role="group" aria-labelledby="qte-label">
+        <button type="button" class="btn btn--secondary h-11 w-11 p-0" aria-label="Diminuer la quantité">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+        </button>
+        <output class="w-10 text-center text-lg font-extrabold tabular-nums">2</output>
+        <button type="button" class="btn btn--secondary h-11 w-11 p-0" aria-label="Augmenter la quantité" disabled>
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+        <span class="text-xs text-ink-subtle">maximum 2</span>
+      </div>
+    </div>
+
+    <div class="mt-5 flex items-baseline justify-between gap-3 border-t border-line pt-4">
+      <p class="text-sm text-ink-muted">2 × 15 crédits</p>
+      <p class="text-right"><span class="text-2xl font-extrabold tabular-nums text-coin">30</span> <span class="text-sm font-semibold text-coin">crédits</span></p>
+    </div>
+
+    <div class="alert alert--info mt-4" role="note">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 7.8v.1"/></svg>
+      <p>Le montant est recalculé côté serveur au moment de la confirmation — il ne peut pas être modifié depuis le navigateur.</p>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-2">
+      <button type="button" class="btn btn--primary btn--lg">Confirmer la vente (+30 crédits)</button>
+      <a href="inventaire.html" class="btn btn--secondary">Annuler</a>
+    </div>
+  </section>
+
+  <p class="mt-10 text-xs font-semibold uppercase tracking-widest text-ink-subtle">Après confirmation</p>
+  <section class="panel mt-2" aria-labelledby="ok-t">
+    <h2 id="ok-t" class="sr-only">Confirmation de vente</h2>
+    <div class="alert alert--success">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+      <p><strong>Vente effectuée : +30 crédits.</strong> Nouveau solde : 1 270 crédits.</p>
+    </div>
+    <p class="mt-3 text-sm text-ink-muted">Il vous reste 1 exemplaire de Riyad Mahrez — conservé automatiquement.</p>
+    <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+      <a href="inventaire.html" class="btn btn--secondary">Revendre d'autres doublons</a>
+      <a href="album.html" class="btn btn--ghost">Retour à l'album</a>
+    </div>
+  </section>
+</main>
+
+<footer class="mx-auto max-w-3xl px-4 pb-6 pt-4 text-xs text-ink-subtle">
+  <p>Maquette statique WikiCards — données factices. Les photos réelles proviendront de Wikimedia Commons avec attribution.</p>
+</footer>
+
+<nav class="bottom-nav md:hidden" aria-label="Navigation principale">
+  <div class="bottom-nav__grid">
+    <a href="accueil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V20h13V9.75"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="collections.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+      <span>Collections</span>
+    </a>
+    <a href="booster-ouverture.html" class="bottom-nav__item bottom-nav__item--action">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5 4.5 13.5h6.1L9.5 21.5 18 10.5h-6.1Z"/></svg>
+      <span>Booster</span>
+    </a>
+    <a href="inventaire.html" class="bottom-nav__item" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+      <span>Doublons</span>
+    </a>
+    <a href="profil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20c.9-3.3 3.7-5.2 7-5.2s6.1 1.9 7 5.2"/></svg>
+      <span>Profil</span>
+    </a>
+  </div>
+</nav>
+</body>
+</html>

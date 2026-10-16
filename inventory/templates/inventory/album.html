@@ -1,17 +1,76 @@
 {% extends "base.html" %}
 {% block title %}Album {{ collection.name }}{% endblock %}
 {% block content %}
-<h1>Album {{ collection.name }}</h1>
-<p>{{ data.discovered }}/{{ data.total }} — {{ data.completion_pct }}%</p>
-<form method="get">
-  <input type="search" name="q" value="{{ request.GET.q }}" placeholder="Recherche">
-  <select name="rarity"><option value="">Toutes raretés</option><option value="common">Commune</option><option value="uncommon">Peu commune</option><option value="rare">Rare</option><option value="epic">Épique</option><option value="legendary">Légendaire</option></select>
-  <select name="box"><option value="all">Toutes</option><option value="discovered">Découvertes</option><option value="missing">Manquantes</option><option value="duplicates">Doublons</option></select>
-  <button type="submit">Filtrer</button>
-</form>
-<ul>
-{% for row in data.cards %}
-  <li><a href="{% url 'inventory:card-detail' collection.slug row.card.pk %}">{{ row.card.entity }}{% if row.discovered %} x{{ row.quantity }}{% else %} — ?{% endif %}</a></li>
-{% endfor %}
-</ul>
+<a href="{% url 'collection:detail' collection.slug %}" class="link text-sm">← Collection {{ collection.name }}</a>
+<h1 class="mt-2 text-2xl font-extrabold tracking-tight">Album {{ collection.name }}</h1>
+<p class="mt-1 text-sm text-ink-muted">{{ data.discovered_all }}/{{ data.total_all }} découvertes · {{ data.completion_pct }} % · <a class="link" href="{% url 'inventory:list' %}">{{ data.duplicates }} doublons à revendre</a></p>
+<div class="progress mt-3" role="img" aria-label="Progression de l'album : {{ data.completion_pct }} %">
+  <div class="progress__bar" style="width:{{ data.completion_pct }}%"></div>
+</div>
+
+{% with box=request.GET.box|default:"all" rarity=request.GET.rarity q=request.GET.q %}
+<nav class="mt-5 flex gap-2 overflow-x-auto pb-1" aria-label="Onglets de l'album">
+  <a href="?box=all{% if rarity %}&amp;rarity={{ rarity }}{% endif %}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="chip{% if box == "all" %} chip--active{% endif %}"{% if box == "all" %} aria-current="page"{% endif %}>Collection · {{ data.total_all }}</a>
+  <a href="?box=owned{% if rarity %}&amp;rarity={{ rarity }}{% endif %}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="chip{% if box == "owned" or box == "discovered" %} chip--active{% endif %}"{% if box == "owned" or box == "discovered" %} aria-current="page"{% endif %}>Mes cartes · {{ data.owned }}</a>
+  <a href="?box=missing{% if rarity %}&amp;rarity={{ rarity }}{% endif %}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="chip{% if box == "missing" %} chip--active{% endif %}"{% if box == "missing" %} aria-current="page"{% endif %}>À découvrir · {{ data.missing }}</a>
+  <a href="?box=duplicates{% if rarity %}&amp;rarity={{ rarity }}{% endif %}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="chip{% if box == "duplicates" %} chip--active{% endif %}"{% if box == "duplicates" %} aria-current="page"{% endif %}>Doublons · {{ data.duplicates }}</a>
+</nav>
+
+<section class="panel mt-3" aria-label="Filtres">
+  <form method="get" class="flex flex-col gap-2 sm:flex-row sm:items-end">
+    <input type="hidden" name="box" value="{{ box }}">
+    <div class="field flex-1">
+      <label class="field__label" for="q">Rechercher</label>
+      <input id="q" class="field__input" type="search" name="q" value="{{ q|default:"" }}" placeholder="Nom de carte…">
+    </div>
+    <div class="field">
+      <label class="field__label" for="rarity">Rareté</label>
+      <select id="rarity" name="rarity" class="field__input">
+        <option value="">Toutes raretés</option>
+        <option value="common"{% if rarity == "common" %} selected{% endif %}>Commune</option>
+        <option value="uncommon"{% if rarity == "uncommon" %} selected{% endif %}>Peu commune</option>
+        <option value="rare"{% if rarity == "rare" %} selected{% endif %}>Rare</option>
+        <option value="epic"{% if rarity == "epic" %} selected{% endif %}>Épique</option>
+        <option value="legendary"{% if rarity == "legendary" %} selected{% endif %}>Légendaire</option>
+      </select>
+    </div>
+    <button class="btn btn--secondary" type="submit">Filtrer</button>
+  </form>
+</section>
+
+<section class="mt-5" aria-label="Cartes">
+  {% if data.cards %}
+  <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+    {% for row in data.cards %}
+      {% if row.discovered %}
+        <a href="{% url 'inventory:card-detail' collection.slug row.card.pk %}" class="pk-card-link" aria-label="{{ row.card.entity.label_fr }}, {{ row.card.rarity.name }}, quantité {{ row.quantity }}">
+          {% include "cards/_pk_card.html" with card=row.card quantity=row.quantity discovered=True size="xs" number=forloop.counter total=data.total_all %}
+        </a>
+      {% else %}
+        <div aria-label="Carte à découvrir">
+          {% include "cards/_pk_card.html" with card=row.card quantity=0 discovered=False size="xs" number=forloop.counter total=data.total_all %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+    <div class="empty-state">
+      {% if box == "owned" or box == "discovered" %}
+        <p><strong>Aucune carte possédée ici.</strong></p>
+        <p>Ouvrez un booster pour commencer la collection.</p>
+      {% elif box == "missing" %}
+        <p><strong>Collection complète, bravo !</strong></p>
+        <p>Il ne reste aucune carte à découvrir avec ces filtres.</p>
+      {% elif box == "duplicates" %}
+        <p><strong>Aucun doublon.</strong></p>
+        <p>Les doubles apparaîtront ici, prêts à être revendus.</p>
+      {% else %}
+        <p><strong>Aucune carte.</strong></p>
+        <p>Essayez d'ajuster recherche ou rareté.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+  <p class="mt-4 text-center text-xs text-ink-subtle">{{ data.cards|length }} carte(s) affichée(s) — {{ data.discovered_all }}/{{ data.total_all }} découvertes au total.</p>
+</section>
+{% endwith %}
 {% endblock %}

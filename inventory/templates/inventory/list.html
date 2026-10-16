@@ -1,10 +1,67 @@
 {% extends "base.html" %}
-{% block title %}Inventaire{% endblock %}
+{% block title %}Mes cartes — Jéjé-TCG{% endblock %}
 {% block content %}
-<h1>Inventaire</h1>
-<ul>
-{% for e in entries %}
-  <li>{{ e.card.collection.name }} — {{ e.card.entity }} x{{ e.quantity }}</li>
-{% empty %}<li>Vide.</li>{% endfor %}
-</ul>
+<h1 class="text-2xl font-extrabold tracking-tight">Mes cartes</h1>
+<p class="mt-1 text-sm text-ink-muted">Toutes vos cartes possédées, toutes collections. Les cartes non possédées restent dans le catalogue de chaque collection.</p>
+
+<nav class="mt-4 flex gap-2 overflow-x-auto pb-1" aria-label="Filtrer par rareté">
+  <a href="{% url 'inventory:list' %}{% if keep_qs %}?{{ keep_qs }}{% endif %}" class="chip{% if not rarity %} chip--active{% endif %}"{% if not rarity %} aria-current="page"{% endif %} aria-label="Toutes raretés, {{ total_count }} carte{{ total_count|pluralize }}">Toutes · {{ total_count }}</a>
+  {% for chip in chips %}
+  <a href="?rarity={{ chip.code }}{% if keep_qs %}&amp;{{ keep_qs }}{% endif %}" class="chip rarity-badge--{{ chip.code }}{% if rarity == chip.code %} chip--active{% endif %}"{% if rarity == chip.code %} aria-current="page"{% endif %} title="{{ chip.name }}" aria-label="Filtrer : {{ chip.name }}, {{ chip.count }} carte{{ chip.count|pluralize }}"><span class="rarity-dot" aria-hidden="true"></span>{{ chip.abbr }} · {{ chip.count }}</a>
+  {% endfor %}
+</nav>
+
+<form method="get" action="{% url 'inventory:list' %}" class="mt-3">
+  {% if rarity %}<input type="hidden" name="rarity" value="{{ rarity }}">{% endif %}
+  {% if sort != "recent" %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
+  {% if doubles %}
+    <button class="btn btn--secondary" type="submit">Voir toutes mes cartes</button>
+  {% else %}
+    <input type="hidden" name="doubles" value="1">
+    <button class="btn btn--secondary" type="submit" aria-label="Afficher uniquement les doublons, {{ doubles_count }} carte{{ doubles_count|pluralize }}">Doublons uniquement · {{ doubles_count }}</button>
+  {% endif %}
+</form>
+
+<section class="panel mt-4" aria-label="Tri des cartes">
+  <form method="get" class="flex flex-col gap-2 sm:flex-row sm:items-end">
+    {% if rarity %}<input type="hidden" name="rarity" value="{{ rarity }}">{% endif %}
+    {% if doubles %}<input type="hidden" name="doubles" value="1">{% endif %}
+    <div class="field flex-1">
+      <label class="field__label" for="sort">Trier par</label>
+      <select id="sort" name="sort" class="field__input">
+        <option value="recent"{% if sort == "recent" %} selected{% endif %}>Dernières obtenues</option>
+        <option value="rarity_desc"{% if sort == "rarity_desc" %} selected{% endif %}>Rareté : légendaires d'abord</option>
+        <option value="rarity_asc"{% if sort == "rarity_asc" %} selected{% endif %}>Rareté : communes d'abord</option>
+        <option value="name"{% if sort == "name" %} selected{% endif %}>Nom A–Z</option>
+      </select>
+    </div>
+    <button class="btn btn--secondary" type="submit">Trier</button>
+  </form>
+</section>
+
+{% if entries %}
+<p class="mt-4 text-xs text-ink-subtle">{{ entries|length }} carte{{ entries|length|pluralize }} possédée{{ entries|length|pluralize }}</p>
+<div class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+  {% for e in entries %}
+    <a href="{% url 'inventory:card-detail' e.card.collection.slug e.card.pk %}" class="pk-card-link" aria-label="{{ e.card.entity.label_fr }}, {{ e.card.collection.name }}{% if e.card.rarity %}, {{ e.card.rarity.name }}{% endif %}, quantité {{ e.quantity }}">
+      {% include "cards/_pk_card.html" with card=e.card quantity=e.quantity discovered=True size="xs" number=forloop.counter total="" %}
+    </a>
+  {% endfor %}
+</div>
+{% else %}
+  {% if has_any %}
+  <div class="empty-state mt-4">
+    {% if doubles %}<p><strong>Aucun doublon pour le moment.</strong></p>
+    {% elif rarity %}<p><strong>Aucune carte de cette rareté.</strong></p>
+    {% else %}<p><strong>Aucune carte avec ces filtres.</strong></p>{% endif %}
+    <p>Vos autres cartes restent visibles avec un autre filtre.</p>
+    <p class="mt-4"><a href="{% url 'inventory:list' %}" class="btn btn--secondary">Voir toutes mes cartes</a></p>
+  </div>
+  {% else %}
+  <div class="empty-state mt-4">
+    <p><strong>Aucune carte pour le moment.</strong></p>
+    <p>Ouvrez un booster pour commencer.</p>
+  </div>
+  {% endif %}
+{% endif %}
 {% endblock %}

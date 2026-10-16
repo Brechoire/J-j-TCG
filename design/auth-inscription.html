@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inscription — WikiCards (maquette)</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+
+<main id="contenu" class="mx-auto w-full max-w-sm px-4 py-10">
+  <p class="text-center"><a href="accueil.html" class="text-xl font-extrabold tracking-tight">WikiCards</a></p>
+
+  <h1 class="mt-8 text-2xl font-extrabold tracking-tight">Créer un compte</h1>
+  <p class="mt-1 text-sm text-ink-muted">Gratuit, sans argent réel. Votre premier booster vous attend.</p>
+
+  <p class="mt-6 text-xs font-semibold uppercase tracking-widest text-ink-subtle">Formulaire</p>
+  <form class="panel mt-2" action="#" method="post">
+    <div class="field">
+      <label class="field__label" for="pseudo">Pseudo</label>
+      <input class="field__input" id="pseudo" name="username" type="text" autocomplete="username" placeholder="alex_m">
+      <p class="field__help">3 à 30 caractères, lettres, chiffres et tirets bas.</p>
+    </div>
+    <div class="field mt-4">
+      <label class="field__label" for="email">Adresse email</label>
+      <input class="field__input" id="email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr">
+    </div>
+    <div class="field mt-4">
+      <label class="field__label" for="mdp">Mot de passe</label>
+      <input class="field__input" id="mdp" name="password" type="password" autocomplete="new-password">
+      <p class="field__help">8 caractères minimum — une phrase simple suffit.</p>
+    </div>
+    <div class="field mt-4">
+      <label class="field__label" for="mdp2">Confirmer le mot de passe</label>
+      <input class="field__input" id="mdp2" name="password2" type="password" autocomplete="new-password">
+    </div>
+    <label class="mt-4 flex items-start gap-2 text-xs text-ink-muted">
+      <input type="checkbox" class="mt-0.5 h-5 w-5 shrink-0 rounded border-line-strong accent-accent" checked>
+      <span>J'accepte que mes statistiques de jeu soient conservées pour faire fonctionner la collection. Aucune donnée revendue.</span>
+    </label>
+    <button type="submit" class="btn btn--primary btn--lg btn--block mt-5">Créer mon compte</button>
+  </form>
+  <p class="mt-4 text-center text-sm text-ink-muted">Déjà un compte ? <a href="auth-connexion.html" class="link">Se connecter</a></p>
+
+  <p class="mt-10 text-xs font-semibold uppercase tracking-widest text-ink-subtle">Variante — erreurs de saisie</p>
+  <form class="panel mt-2" action="#" method="post">
+    <div class="alert alert--error" role="alert">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3.5 21.5 20h-19z" stroke-linejoin="round"/><path d="M12 10v4.2"/><path d="M12 17.2v.1"/></svg>
+      <p><strong>2 champs à corriger</strong> — les détails sont sous chaque champ.</p>
+    </div>
+    <div class="field field--error mt-4">
+      <label class="field__label" for="email-err">Adresse email</label>
+      <input class="field__input" id="email-err" name="email" type="email" autocomplete="email" aria-invalid="true" aria-describedby="email-err-msg" value="vous@exemple">
+      <p class="field__error" id="email-err-msg">
+        <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5v.1"/></svg>
+        <span>Un compte existe déjà avec cette adresse. <a class="link" href="auth-connexion.html">Se connecter</a>.</span>
+      </p>
+    </div>
+    <div class="field field--error mt-4">
+      <label class="field__label" for="mdp2-err">Confirmer le mot de passe</label>
+      <input class="field__input" id="mdp2-err" name="password2" type="password" autocomplete="new-password" aria-invalid="true" aria-describedby="mdp2-err-msg" value="azerty">
+      <p class="field__error" id="mdp2-err-msg">
+        <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5v.1"/></svg>
+        <span>Les deux mots de passe ne correspondent pas.</span>
+      </p>
+    </div>
+    <button type="button" class="btn btn--primary btn--lg btn--block mt-5">Créer mon compte</button>
+  </form>
+
+  <p class="mt-8 text-center text-sm"><a href="accueil.html" class="link">← Retour à l'accueil</a></p>
+</main>
+
+<footer class="mx-auto max-w-3xl px-4 pb-8 text-center text-xs text-ink-subtle">
+  <p>Maquette statique WikiCards — données factices.</p>
+</footer>
+</body>
+</html>

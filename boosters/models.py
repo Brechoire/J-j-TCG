@@ -20,6 +20,15 @@ class BoosterOpening(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     idempotency_key = models.UUIDField(unique=True, default=uuid.uuid4)
     result_cache = models.JSONField(default=dict, blank=True)
+    #: Pack ciblé au tirage (null = toute la collection). Conservé si le pack
+    #: est supprimé (SET_NULL) pour ne pas perdre l'historique.
+    pack = models.ForeignKey(
+        "collection.Pack",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="openings",
+    )
     cards = models.ManyToManyField(
         "cards.Card", through="BoosterOpeningCard", related_name="openings"
     )

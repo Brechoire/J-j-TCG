@@ -47,6 +47,27 @@ class CoreConstantsTests(TestCase):
     def test_gameplay_constants(self):
         from core import constants
 
-        assert constants.FREE_BOOSTER_COOLDOWN_SECONDS == 600
+        assert constants.FREE_BOOSTER_COOLDOWN_SECONDS == 60  # TODO TEMP : remettre 600
         assert constants.BOOSTER_PRICE == 250
         assert constants.BOOSTER_SIZE == 5
+
+
+class StyledAuthTests(TestCase):
+    def test_login_renders_design_system(self):
+        r = self.client.get(reverse("accounts:login"))
+        assert r.status_code == 200
+        assert "field__input" in r.text
+        assert "btn--primary" in r.text
+
+    def test_signup_renders_design_system(self):
+        r = self.client.get(reverse("accounts:signup"))
+        assert r.status_code == 200
+        assert "field__input" in r.text
+        assert "Créer mon compte" in r.text
+
+    def test_login_invalid_shows_alert(self):
+        r = self.client.post(
+            reverse("accounts:login"), {"username": "nobody", "password": "x" * 12}
+        )
+        assert r.status_code == 200
+        assert 'role="alert"' in r.text

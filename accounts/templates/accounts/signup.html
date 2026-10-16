@@ -1,11 +1,34 @@
 {% extends "base.html" %}
-{% block title %}Inscription — WikiCards{% endblock %}
+{% block title %}Inscription — Jéjé-TCG{% endblock %}
 {% block content %}
-<h1>Inscription</h1>
-<form method="post" novalidate>
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Créer mon compte</button>
-</form>
-<p><a href="{% url 'accounts:login' %}">Déjà inscrit ? Connexion</a></p>
+<div class="mx-auto max-w-sm">
+  <h1 class="text-2xl font-extrabold tracking-tight">Inscription</h1>
+  <p class="mt-1 text-sm text-ink-muted">Un compte gratuit, aucun argent réel.</p>
+
+  <form method="post" class="panel mt-5" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="alert alert--error" role="alert">
+      <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 3.5 21.5 20h-19z" stroke-linejoin="round"/><path d="M12 10v4.2"/><path d="M12 17.2v.1"/></svg>
+      <div>{% for e in form.non_field_errors %}<p{% if not forloop.first %} class="mt-1"{% endif %}>{{ e }}</p>{% endfor %}</div>
+    </div>
+    {% endif %}
+    {% for field in form.visible_fields %}
+    <div class="field{% if field.errors %} field--error{% endif %}{% if not forloop.first or form.non_field_errors %} mt-4{% endif %}">
+      <label class="field__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.help_text %}<p class="field__help">{{ field.help_text|safe }}</p>{% endif %}
+      {% for e in field.errors %}
+      <p class="field__error" id="{{ field.id_for_label }}-msg">
+        <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5v.1"/></svg>
+        <span>{{ e }}</span>
+      </p>
+      {% endfor %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn--primary btn--lg btn--block mt-5">Créer mon compte</button>
+  </form>
+  <p class="mt-4 text-center text-sm text-ink-muted">Déjà inscrit ? <a href="{% url 'accounts:login' %}" class="link">Se connecter</a></p>
+  <p class="mt-4 text-center text-sm"><a href="{% url 'home:index' %}" class="link">← Retour à l'accueil</a></p>
+</div>
 {% endblock %}

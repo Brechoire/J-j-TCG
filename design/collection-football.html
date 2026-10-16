@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Football — WikiCards (maquette)</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink pb-24 md:pb-10">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+
+<header class="top-bar">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+    <a href="index.html" class="text-lg font-extrabold tracking-tight">WikiCards</a>
+    <div class="flex items-center gap-2">
+      <a href="boutique.html" class="wallet-chip" aria-label="Portefeuille : 1 240 crédits">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+        <span>1 240</span>
+      </a>
+      <nav class="hidden items-center gap-1 text-sm md:flex" aria-label="Navigation principale">
+        <a href="collections.html" class="rounded-lg px-3 py-2 font-semibold text-ink" aria-current="page">Collections</a>
+        <a href="booster-historique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Tirages</a>
+        <a href="boutique.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Boutique</a>
+        <a href="profil.html" class="rounded-lg px-3 py-2 text-ink-muted hover:bg-canvas">Profil</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main id="contenu" class="mx-auto w-full max-w-3xl px-4 py-6">
+  <a href="collections.html" class="inline-flex items-center gap-1 text-sm font-semibold text-accent">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg>
+    Toutes les collections
+  </a>
+
+  <header class="mt-2">
+    <div class="flex flex-wrap items-center gap-2">
+      <h1 class="text-2xl font-extrabold tracking-tight">Football</h1>
+      <span class="rarity-badge rarity-badge--common">100 cartes</span>
+    </div>
+    <p class="mt-1 max-w-prose text-sm text-ink-muted">Joueuses et joueurs issus de Wikipédia / Wikidata. Rareté fondée sur la popularité encyclopédique.</p>
+  </header>
+
+  <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+    <a href="booster-ouverture.html" class="btn btn--primary">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5 4.5 13.5h6.1L9.5 21.5 18 10.5h-6.1Z"/></svg>
+      Ouvrir un booster
+    </a>
+    <a href="album.html" class="btn btn--secondary">Voir mon album (42 %)</a>
+  </div>
+
+  <section class="panel mt-5" aria-labelledby="prog-t">
+    <h2 id="prog-t" class="text-base font-bold">Votre progression</h2>
+    <p class="mt-3 flex items-baseline gap-2">
+      <span class="text-3xl font-extrabold tracking-tight">42</span>
+      <span class="text-sm text-ink-muted">/ 100 cartes découvertes</span>
+    </p>
+    <div class="progress mt-3" role="img" aria-label="Progression : 42 %">
+      <div class="progress__bar" style="width:42%"></div>
+    </div>
+    <div class="mt-4 grid grid-cols-3 gap-3">
+      <div class="stat"><span class="stat__value">42</span><span class="stat__label">Uniques</span></div>
+      <div class="stat"><span class="stat__value">58</span><span class="stat__label">Manquantes</span></div>
+      <div class="stat"><span class="stat__value">37</span><span class="stat__label">Doublons</span></div>
+    </div>
+    <p class="mt-4 text-sm text-ink-muted">Vos doublons valent environ <strong class="font-bold text-coin">385 crédits</strong>. <a href="inventaire.html" class="link">Les revendre</a></p>
+  </section>
+
+  <section class="panel mt-5" aria-labelledby="rep-t">
+    <h2 id="rep-t" class="text-base font-bold">Répartition du catalogue</h2>
+    <p class="mt-1 text-xs text-ink-subtle">La rareté reflète la popularité encyclopédique (pages vues Wikipédia), pas la valeur sportive.</p>
+    <ul class="mt-3 divide-y divide-line">
+      <li class="flex items-center gap-3 py-2.5">
+        <span class="rarity-badge rarity-badge--common w-28 shrink-0 justify-start sm:w-32"><span class="rarity-dot" aria-hidden="true"></span>Commune</span>
+        <span class="hidden w-12 shrink-0 text-right text-sm font-semibold tabular-nums sm:block">55</span>
+        <div class="progress flex-1"><div class="progress__bar bg-common" style="width:47%"></div></div>
+        <span class="w-14 shrink-0 text-right text-xs text-ink-subtle tabular-nums">26/55</span>
+      </li>
+      <li class="flex items-center gap-3 py-2.5">
+        <span class="rarity-badge rarity-badge--uncommon w-28 shrink-0 justify-start sm:w-32"><span class="rarity-dot" aria-hidden="true"></span>Peu commune</span>
+        <span class="hidden w-12 shrink-0 text-right text-sm font-semibold tabular-nums sm:block">25</span>
+        <div class="progress flex-1"><div class="progress__bar bg-uncommon" style="width:40%"></div></div>
+        <span class="w-14 shrink-0 text-right text-xs text-ink-subtle tabular-nums">10/25</span>
+      </li>
+      <li class="flex items-center gap-3 py-2.5">
+        <span class="rarity-badge rarity-badge--rare w-28 shrink-0 justify-start sm:w-32"><span class="rarity-dot" aria-hidden="true"></span>Rare</span>
+        <span class="hidden w-12 shrink-0 text-right text-sm font-semibold tabular-nums sm:block">12</span>
+        <div class="progress flex-1"><div class="progress__bar bg-rare" style="width:42%"></div></div>
+        <span class="w-14 shrink-0 text-right text-xs text-ink-subtle tabular-nums">5/12</span>
+      </li>
+      <li class="flex items-center gap-3 py-2.5">
+        <span class="rarity-badge rarity-badge--epic w-28 shrink-0 justify-start sm:w-32"><span class="rarity-dot" aria-hidden="true"></span>Épique</span>
+        <span class="hidden w-12 shrink-0 text-right text-sm font-semibold tabular-nums sm:block">6</span>
+        <div class="progress flex-1"><div class="progress__bar bg-epic" style="width:17%"></div></div>
+        <span class="w-14 shrink-0 text-right text-xs text-ink-subtle tabular-nums">1/6</span>
+      </li>
+      <li class="flex items-center gap-3 py-2.5">
+        <span class="rarity-badge rarity-badge--legendary w-28 shrink-0 justify-start sm:w-32"><span class="rarity-dot" aria-hidden="true"></span>Légendaire</span>
+        <span class="hidden w-12 shrink-0 text-right text-sm font-semibold tabular-nums sm:block">2</span>
+        <div class="progress flex-1"><div class="progress__bar bg-legendary" style="width:0%"></div></div>
+        <span class="w-14 shrink-0 text-right text-xs text-ink-subtle tabular-nums">0/2</span>
+      </li>
+    </ul>
+  </section>
+
+  <div class="alert alert--info mt-5">
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5"/><path d="M12 7.8v.1"/></svg>
+    <div>
+      <p class="font-semibold">Rareté = popularité encyclopédique</p>
+      <p class="mt-0.5 text-sm">Les seuils sont calculés sur 60 jours de pages vues Wikipédia, puis verrouillables par l'équipe. Une légende discrète peut être « Commune ».</p>
+    </div>
+  </div>
+</main>
+
+<footer class="mx-auto max-w-3xl px-4 pb-6 pt-4 text-xs text-ink-subtle">
+  <p>Maquette statique WikiCards — données factices. Les photos réelles proviendront de Wikimedia Commons avec attribution.</p>
+</footer>
+
+<nav class="bottom-nav md:hidden" aria-label="Navigation principale">
+  <div class="bottom-nav__grid">
+    <a href="accueil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.75 12 3.5l9 7.25"/><path d="M5.5 9.75V20h13V9.75"/></svg>
+      <span>Accueil</span>
+    </a>
+    <a href="collections.html" class="bottom-nav__item" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></svg>
+      <span>Collections</span>
+    </a>
+    <a href="booster-ouverture.html" class="bottom-nav__item bottom-nav__item--action">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2.5 4.5 13.5h6.1L9.5 21.5 18 10.5h-6.1Z"/></svg>
+      <span>Booster</span>
+    </a>
+    <a href="inventaire.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+      <span>Doublons</span>
+    </a>
+    <a href="profil.html" class="bottom-nav__item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.2" r="3.7"/><path d="M5 20c.9-3.3 3.7-5.2 7-5.2s6.1 1.9 7 5.2"/></svg>
+      <span>Profil</span>
+    </a>
+  </div>
+</nav>
+</body>
+</html>

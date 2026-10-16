@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ouverture de booster — WikiCards (maquette)</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-boost-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+
+<header class="mx-auto flex w-full max-w-md items-center justify-between gap-3 px-4 py-4">
+  <a href="accueil.html" class="inline-flex items-center gap-1 rounded-lg px-2 py-2 text-sm font-semibold text-boost-link hover:bg-boost-surface-2">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5.5 8.5 12l6.5 6.5"/></svg>
+    Accueil
+  </a>
+  <a href="boutique.html" class="wallet-chip" aria-label="Portefeuille : 1 240 crédits">
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="3.5"/></svg>
+    <span>1 240</span>
+  </a>
+</header>
+
+<main id="contenu" class="mx-auto w-full max-w-md px-4 pb-10">
+  <h1 class="text-center text-2xl font-extrabold tracking-tight">Booster Football</h1>
+  <p class="mt-1 text-center text-sm text-boost-ink-muted">5 cartes distinctes · 1 ouverture gratuite toutes les 10 minutes</p>
+
+  <!-- Le pack -->
+  <div class="mx-auto mt-8 w-44 overflow-hidden rounded-2xl border border-boost-line bg-gradient-to-b from-boost-surface-2 via-boost-surface to-boost text-center shadow-xl" aria-hidden="true">
+    <div class="h-1.5 bg-gradient-to-r from-rare via-epic to-legendary"></div>
+    <div class="px-4 py-8">
+      <svg class="mx-auto h-10 w-10 text-legendary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5 4.5 13.5h6.1L9.5 21.5 18 10.5h-6.1Z"/></svg>
+      <p class="mt-3 text-lg font-extrabold tracking-tight">Football</p>
+      <p class="text-xs text-boost-ink-muted">100 cartes · 5 raretés</p>
+    </div>
+  </div>
+
+  <div class="mt-8 flex flex-col gap-2">
+    <a href="booster-revelation.html" class="btn btn--primary btn--lg btn--block">Ouvrir le booster gratuit</a>
+    <a href="boutique.html" class="btn btn--secondary btn--block">Acheter un booster — 250 crédits</a>
+    <p class="text-center text-xs text-boost-ink-muted">L'achat n'affecte pas le minuteur gratuit.</p>
+  </div>
+
+  <section class="panel mt-8" aria-labelledby="savoir-t">
+    <h2 id="savoir-t" class="text-sm font-bold">À savoir</h2>
+    <ul class="mt-3 space-y-2 text-sm text-boost-ink-muted">
+      <li class="flex items-start gap-2">
+        <svg class="mt-0.5 h-4 w-4 shrink-0 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+        <span>5 cartes <strong class="font-semibold text-boost-ink">distinctes</strong> dans chaque booster, dupliqué possible d'un booster à l'autre.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <svg class="mt-0.5 h-4 w-4 shrink-0 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+        <span>Raretés de <strong class="font-semibold text-boost-ink">Commune à Légendaire</strong> — la rareté reflète la popularité encyclopédique, pas la chance du tirage.</span>
+      </li>
+      <li class="flex items-start gap-2">
+        <svg class="mt-0.5 h-4 w-4 shrink-0 text-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+        <span>Les doublons se revendent en crédits, les crédits en boosters. <strong class="font-semibold text-boost-ink">Aucun argent réel.</strong></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Variante cooldown -->
+  <p class="mt-10 text-center text-xs font-semibold uppercase tracking-widest text-boost-ink-muted">Variante — minuteur actif</p>
+  <section class="panel mt-2 text-center" aria-labelledby="cooldown-t">
+    <h2 id="cooldown-t" class="sr-only">Booster en attente</h2>
+    <p class="text-4xl font-extrabold tabular-nums tracking-tight" role="timer">09:41</p>
+    <p class="mt-1 text-sm text-boost-ink-muted">Prochain booster gratuit dans 09:41</p>
+    <div class="progress mt-4" role="img" aria-label="Minuteur : presque terminé">
+      <div class="progress__bar" style="width:3%"></div>
+    </div>
+    <p class="mt-2 text-xs text-boost-ink-muted">Minuteur global — actif depuis l'ouverture précédente (18:42).</p>
+    <div class="mt-5 flex flex-col gap-2">
+      <button type="button" class="btn btn--primary btn--lg btn--block" disabled>Ouvrir le booster gratuit</button>
+      <a href="boutique.html" class="btn btn--secondary btn--block">Acheter un booster — 250 crédits</a>
+    </div>
+  </section>
+</main>
+
+<footer class="mx-auto w-full max-w-md px-4 pb-8 text-xs text-boost-ink-muted">
+  <p>Maquette statique WikiCards — données factices. Écran sombre « Boost » réservé au flux booster ; le reste de l'application reste clair.</p>
+</footer>
+</body>
+</html>

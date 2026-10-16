@@ -15,8 +15,18 @@ class CooldownNotReady(Exception):
         super().__init__(f"Prochain booster gratuit : {next_available}")
 
 
+class NotEnoughCards(Exception):
+    """Pas assez de cartes éligibles (ex. pack trop petit pour 5 distinctes)."""
+
+    def __init__(self, needed, found, label="ce périmètre"):
+        self.needed = needed
+        self.found = found
+        self.label = label
+        super().__init__(f"{label} : {found} carte(s) éligible(s), {needed} requises.")
+
+
 class BoosterOpeningService:
-    def open_free(self, player, collection, idempotency_key):
+    def open_free(self, player, collection, idempotency_key, pack=None):
         from accounts.models import PlayerProfile
         from boosters.models import BoosterOpening, BoosterOpeningCard
         from inventory.models import InventoryEntry
@@ -38,13 +48,24 @@ class BoosterOpeningService:
             if existing:
                 return existing
 
-            picked = self._draw_cards(collection, constants.BOOSTER_SIZE)
+            eligible_ids = None
+            if pack is not None:
+                from collection.packs import pack_card_ids
+
+                eligible_ids = pack_card_ids(pack)
+            picked = self._draw_cards(
+                collection,
+                constants.BOOSTER_SIZE,
+                eligible_ids=eligible_ids,
+                label=f"pack {pack.name}" if pack is not None else "cette collection",
+            )
             opening = BoosterOpening.objects.create(
                 player=player,
                 collection=collection,
                 kind=BoosterOpening.Kind.FREE,
                 idempotency_key=idempotency_key,
                 result_cache={"card_ids": [c.pk for c in picked]},
+                pack=pack,
             )
             for pos, card in enumerate(picked, start=1):
                 BoosterOpeningCard.objects.create(opening=opening, card=card, position=pos)
@@ -71,16 +92,15 @@ class BoosterOpeningService:
                 )
 
     @staticmethod
-    def _draw_cards(collection, size: int):
+    def _draw_cards(collection, size: int, eligible_ids=None, label="cette collection"):
         from cards.models import Card
 
-        eligible = list(
-            Card.objects.filter(
-                collection=collection, is_active=True, rarity__isnull=False
-            ).select_related("rarity")
-        )
+        qs = Card.objects.filter(collection=collection, is_active=True, rarity__isnull=False)
+        if eligible_ids is not None:
+            qs = qs.filter(pk__in=eligible_ids)
+        eligible = list(qs.select_related("rarity"))
         if len(eligible) < size:
-            raise ValueError("Pas assez de cartes éligibles dans la collection")
+            raise NotEnoughCards(needed=size, found=len(eligible), label=label)
         rng = random.SystemRandom()
         picked = []
         picked_ids = set()

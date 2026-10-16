@@ -1,4 +1,4 @@
-"""Données album : progression uniques, filtres, recherche."""
+"""Données album : progression uniques, filtres, recherche, compteurs d'onglets."""
 
 
 def get_album_data(player, collection, rarity_code=None, q=None, box="all"):
@@ -21,12 +21,17 @@ def get_album_data(player, collection, rarity_code=None, q=None, box="all"):
         e.card_id: e.quantity
         for e in InventoryEntry.objects.filter(player=player, card__in=[c.pk for c in cards])
     }
+    # Compteurs sur le périmètre filtré (rarity+q), avant filtre d'onglet.
+    owned_count = sum(1 for c in cards if owned.get(c.pk, 0) > 0)
+    missing_count = len(cards) - owned_count
+    duplicates_count = sum(1 for c in cards if owned.get(c.pk, 0) >= 2)
+
     rows = []
     for c in cards:
         qty = owned.get(c.pk, 0)
         if box == "missing" and qty > 0:
             continue
-        if box == "discovered" and qty == 0:
+        if box in ("discovered", "owned") and qty == 0:
             continue
         if box == "duplicates" and qty < 2:
             continue
@@ -45,4 +50,10 @@ def get_album_data(player, collection, rarity_code=None, q=None, box="all"):
         "total": len(rows) if (rarity_code or q or box != "all") else total_all,
         "discovered": discovered_all,
         "completion_pct": completion_pct,
+        # Compteurs d'onglets (périmètre filtré) + progression globale.
+        "owned": owned_count,
+        "missing": missing_count,
+        "duplicates": duplicates_count,
+        "total_all": total_all,
+        "discovered_all": discovered_all,
     }

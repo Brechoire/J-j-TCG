@@ -3,6 +3,34 @@
 from django.db import transaction
 from django.utils import timezone
 
+DEFAULT_IMPORT_CONFIG = {
+    "instance_of": "Q5",  # être humain
+    "occupation_qid": "Q937857",  # joueur de foot
+}
+
+
+def resolve_import_config(collection) -> dict:
+    """Fusionne défauts foot + `Collection.import_config` (admin).
+
+    `occupation_qid: null` explicite = filtre P31 seul (ex. stades).
+    `sport_qid` optionnel = filtre P641 (ex. stades de foot : "Q2736").
+    Exemples :
+    - joueurs : {"instance_of": "Q5", "occupation_qid": "Q937857"}
+    - entraîneurs : {"instance_of": "Q5", "occupation_qid": "Q628099"}
+    - stades de foot : {"instance_of": "Q483110", "occupation_qid": null,
+      "sport_qid": "Q2736"}
+    """
+    config = dict(DEFAULT_IMPORT_CONFIG)
+    stored = getattr(collection, "import_config", None) or {}
+    if isinstance(stored, dict):
+        if stored.get("instance_of"):
+            config["instance_of"] = stored["instance_of"]
+        if "occupation_qid" in stored:
+            config["occupation_qid"] = stored["occupation_qid"] or None
+        if stored.get("sport_qid"):
+            config["sport_qid"] = stored["sport_qid"]
+    return config
+
 
 def run_football_import(
     collection_slug="football", limit=100, dry_run=False, qid=None, client=None
@@ -17,17 +45,28 @@ def run_football_import(
         client = WikidataClient()
 
     collection = None
+    config = dict(DEFAULT_IMPORT_CONFIG)
     if not dry_run:
-        collection, _ = Collection.objects.get_or_create(
+        collection, created = Collection.objects.get_or_create(
             slug=collection_slug,
-            defaults={"name": collection_slug.capitalize(), "status": "active"},
+            defaults={
+                "name": collection_slug.capitalize(),
+                "status": "active",
+                "import_config": dict(DEFAULT_IMPORT_CONFIG),
+            },
         )
+        # Collection existante sans config (cas DB vide / pré-migration) :
+        # applique les défauts foot pour garder un comportement prévisible.
+        if not created and not collection.import_config:
+            collection.import_config = dict(DEFAULT_IMPORT_CONFIG)
+            collection.save(update_fields=["import_config"])
+        config = resolve_import_config(collection)
 
     job = None
     if not dry_run:
         job = ImportJob.objects.create(
             collection=collection,
-            params={"limit": limit, "qid": qid, "dry_run": dry_run},
+            params={"limit": limit, "qid": qid, "dry_run": dry_run, **config},
             status="running",
             progress={"done": 0, "total": limit if not qid else 1},
         )
@@ -38,7 +77,12 @@ def run_football_import(
     done = 0
 
     try:
-        qids = [qid] if qid else client.fetch_football_qids(limit)
+        if qid:
+            qids = [qid]
+        elif hasattr(client, "fetch_qids"):
+            qids = client.fetch_qids(limit, **config)
+        else:  # clients de test historiques sans fetch_qids
+            qids = client.fetch_football_qids(limit)
     except Exception as e:
         errors.append(f"liste QID: {e}")
         qids = []
@@ -70,6 +114,7 @@ def run_football_import(
                         "props": data.get("props", {}),
                         "image_url": data.get("image_url", ""),
                         "image_attribution": data.get("image_attribution", ""),
+                        "license": data.get("license", ""),
                         "pageviews_60d": data.get("pageviews_60d"),
                         "synced_at": timezone.now(),
                     },

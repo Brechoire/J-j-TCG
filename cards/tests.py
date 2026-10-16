@@ -97,3 +97,105 @@ class RarityAssignmentTests(TestCase):
         card.refresh_from_db()
         assert card.rarity.code == "legendary"
         assert card.is_locked is True
+
+    def test_rarity_follows_pageviews_order(self):
+        """À complétude égale, le tri (donc la rareté) suit les visites wiki."""
+        from cards.models import Card, Rarity
+        from cards.services import RarityAssignmentService
+        from collection.models import Collection
+        from encyclopedia.models import EncyclopediaEntity
+
+        col = Collection.objects.create(name="Foot", slug="foot-pv")
+        for code, name, color, weight, sale, order in [
+            ("common", "Commune", "#9ca3af", 55, 5, 1),
+            ("uncommon", "Peu commune", "#22c55e", 25, 15, 2),
+            ("rare", "Rare", "#3b82f6", 12, 50, 3),
+            ("epic", "Épique", "#a855f7", 6, 150, 4),
+            ("legendary", "Légendaire", "#f59e0b", 2, 500, 5),
+        ]:
+            Rarity.objects.create(
+                code=code,
+                name=name,
+                color=color,
+                draw_weight=weight,
+                sale_value=sale,
+                order=order,
+            )
+        n = 50
+        for i in range(n):
+            ent = EncyclopediaEntity.objects.create(
+                wikidata_id=f"QPV{i}",
+                label_fr=f"Joueur PV {i}",
+                pageviews_60d=(i + 1) * 1000,  # croissant avec i
+                image_url="http://example.com/img.jpg",
+                description_fr="desc",
+                props={"club": "FC Test"},
+            )
+            Card.objects.create(collection=col, entity=ent)
+        RarityAssignmentService().assign_collection(col)
+        top = Card.objects.select_related("entity", "rarity").order_by("-entity__pageviews_60d")
+        assert top.first().rarity.code == "legendary"
+        assert top.first().entity.pageviews_60d == n * 1000
+        assert top.last().rarity.code == "common"
+        scores = [c.auto_score for c in top]
+        assert scores == sorted(scores, reverse=True)
+
+
+def _unsaved_card_no_photo(nationality="Brésil", rarity_code="rare", rarity_name="Rare"):
+    from cards.models import Card, Rarity
+    from collection.models import Collection
+    from encyclopedia.models import EncyclopediaEntity
+
+    col = Collection(name="Football", slug="football")
+    ent = EncyclopediaEntity(
+        wikidata_id="QX",
+        label_fr="Testeur",
+        image_url="",
+        props={"nationality": nationality, "club": ""},
+    )
+    rar = Rarity(code=rarity_code, name=rarity_name, sale_value=50, order=3)
+    return Card(collection=col, entity=ent, rarity=rar)
+
+
+class NoPhotoFallbackTests(TestCase):
+    """Sans photo, la carte garde le drapeau en légende mais la révélation
+    ne doit jamais le cloner en vignette (drapeau flou étiré)."""
+
+    def test_caption_flag_keeps_exclusion_class(self):
+        from django.template.loader import render_to_string
+
+        html = render_to_string(
+            "cards/_pk_card.html",
+            {
+                "card": _unsaved_card_no_photo(),
+                "quantity": 1,
+                "discovered": True,
+                "size": "xs",
+                "number": 1,
+                "total": 5,
+            },
+        )
+        assert 'class="pk-card__flag-img"' in html
+        assert "Photo de" not in html
+
+    def test_reveal_thumbs_ignore_caption_flag(self):
+        from pathlib import Path
+
+        js = (Path(__file__).resolve().parent.parent / "static" / "js" / "reveal.js").read_text(
+            encoding="utf-8"
+        )
+        assert "pk-card__flag-img" in js
+
+    def test_no_photo_rarity_tint_compiled(self):
+        import re
+        from pathlib import Path
+
+        base = Path(__file__).resolve().parent.parent / "static"
+        src = (base / "src" / "input.css").read_text(encoding="utf-8")
+        out = (base / "css" / "output.css").read_text(encoding="utf-8")
+        pattern = (
+            r"\.pk-card--rare:not\(\.pk-card--missing\)\s*\.pk-card__art"
+            r"\s*\{\s*background\s*:\s*var\(--color-rare-tint\)"
+        )
+        assert re.search(pattern, src), "teinte absente de input.css"
+        assert re.search(pattern, out), "output.css obsolète : relancer npm run build:css"

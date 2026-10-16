@@ -1,10 +1,83 @@
 {% extends "base.html" %}
-{% block title %}Collections{% endblock %}
+{% block title %}Collections — Jéjé-TCG{% endblock %}
 {% block content %}
-<h1>Collections</h1>
-<ul>
-{% for c in collections %}
-  <li><a href="{% url 'collection:detail' c.slug %}">{{ c.name }}</a></li>
-{% empty %}<li>Aucune collection.</li>{% endfor %}
-</ul>
+<header class="mb-5">
+  <p class="text-xs font-semibold uppercase tracking-widest text-ink-subtle">Jeu de collection encyclopédique</p>
+  <h1 class="mt-1 text-2xl font-extrabold tracking-tight">Collections</h1>
+  <p class="mt-1 text-sm text-ink-muted">Un thème = une encyclopédie à collectionner. Choisissez un thème, ouvrez des boosters, complétez l'album.</p>
+  {% if total_collections %}
+  <p class="mt-2 text-xs text-ink-subtle">{{ total_collections }} collection{{ total_collections|pluralize }} active{{ total_collections|pluralize }} · {{ total_cards }} carte{{ total_cards|pluralize }} au catalogue</p>
+  {% endif %}
+</header>
+
+{% if items %}
+<div class="grid gap-4{% if items|length > 1 %} sm:grid-cols-2{% endif %}">
+  {% for item in items %}
+  {% with col=item.collection %}
+  <section class="panel" aria-labelledby="col-{{ col.slug }}">
+    <div class="flex items-start justify-between gap-3">
+      <div class="min-w-0">
+        <h2 id="col-{{ col.slug }}" class="text-lg font-bold">{{ col.name }}</h2>
+        {% if col.description %}
+        <p class="mt-1 text-sm text-ink-muted">{{ col.description }}</p>
+        {% else %}
+        <p class="mt-1 text-sm text-ink-muted">Cartes encyclopédiques à collectionner, de commune à légendaire.</p>
+        {% endif %}
+      </div>
+      {% if item.total %}
+      <span class="rarity-badge rarity-badge--common shrink-0">{{ item.total }} carte{{ item.total|pluralize }}</span>
+      {% else %}
+      <span class="rarity-badge rarity-badge--common shrink-0">Bientôt</span>
+      {% endif %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+      {% if item.total %}
+      <p class="mt-3 flex items-baseline gap-2">
+        <span class="text-2xl font-extrabold tracking-tight tabular-nums">{{ item.completion_pct }} %</span>
+        <span class="text-sm text-ink-muted">de l'album complété ({{ item.discovered }} / {{ item.total }})</span>
+      </p>
+      <div class="progress mt-2" role="img" aria-label="Progression de l'album {{ col.name }} : {{ item.completion_pct }} %">
+        <div class="progress__bar" style="width:{{ item.completion_pct }}%"></div>
+      </div>
+      {% else %}
+      <p class="mt-3 text-sm text-ink-muted">Catalogue en préparation — les cartes arrivent bientôt.</p>
+      {% endif %}
+    {% else %}
+      {% if item.total %}
+      <p class="mt-3 text-sm text-ink-muted">{{ item.total }} cartes à découvrir. <a class="link" href="{% url 'accounts:login' %}">Connectez-vous</a> pour suivre votre progression.</p>
+      {% else %}
+      <p class="mt-3 text-sm text-ink-muted">Catalogue en préparation — créez un compte pour être prêt.</p>
+      {% endif %}
+    {% endif %}
+
+    <div class="mt-4 flex flex-col gap-2 sm:flex-row">
+      <a href="{% url 'collection:detail' col.slug %}" class="btn btn--primary">Ouvrir la collection</a>
+      {% if request.user.is_authenticated %}
+        {% url 'inventory:album' col.slug as album_url %}
+        <a href="{{ album_url }}" class="btn btn--secondary">Voir mon album</a>
+      {% else %}
+        {% url 'inventory:album' col.slug as album_url %}
+        <a href="{% url 'accounts:login' %}?next={{ album_url|urlencode }}" class="btn btn--secondary">Se connecter pour collectionner</a>
+      {% endif %}
+    </div>
+  </section>
+  {% endwith %}
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <p><strong>Aucune collection pour le moment.</strong></p>
+  <p class="mt-1">Les thèmes sont créés par l'équipe, un à la fois. Revenez bientôt ou retournez à l'accueil.</p>
+  <p class="mt-4"><a href="{% url 'home:index' %}" class="btn btn--secondary">Retour à l'accueil</a></p>
+</div>
+{% endif %}
+
+<section class="mt-5" aria-labelledby="col-a-venir">
+  <h2 id="col-a-venir" class="sr-only">Thèmes à venir</h2>
+  <div class="empty-state">
+    <p class="font-semibold text-ink">D'autres thèmes arrivent</p>
+    <p class="mt-1">Cinéma, sciences, histoire… Les collections sont créées par l'équipe, une à la fois.</p>
+  </div>
+</section>
 {% endblock %}

@@ -1,0 +1,63 @@
+{# Carte TCG WikiCards — anatomie originale inspirée TCG (nom, POP, illustration portrait, stats). #}
+{% load cards_extras %}
+{# Contexte : card, quantity=0, discovered=False, size=""/"xs", badge=""/"new"/"dup", number=, total= . #}
+{# Holo automatique (rare/épique/légendaire possédées) ; tilt JS uniquement sur pointeur fin. #}
+{# Ne pas envelopper ici : le parent choisit <a> (possédée) ou <div> (à découvrir). #}
+{% with rarity_code=card.rarity.code|default:"common" rarity_name=card.rarity.name|default:"Commune" %}
+{% if discovered and rarity_code == "rare" or discovered and rarity_code == "epic" or discovered and rarity_code == "legendary" %}
+<article class="pk-card pk-card--{{ rarity_code }} pk-card--holo{% if not discovered %} pk-card--missing{% endif %}{% if size == "xs" %} pk-card--xs{% endif %}">
+{% else %}
+<article class="pk-card pk-card--{{ rarity_code }}{% if not discovered %} pk-card--missing{% endif %}{% if size == "xs" %} pk-card--xs{% endif %}"{% if not discovered %} aria-label="Carte à découvrir"{% endif %}>
+{% endif %}
+  <div class="pk-card__inner" data-pk-tilt>
+    <header class="pk-card__head">
+      <span class="pk-card__stage" aria-hidden="true">{{ card.collection.card_type_label }}</span>
+      <h3 class="pk-card__name">{% if discovered %}{{ card.entity.label_fr }}{% else %}???{% endif %}</h3>
+      <span class="pk-card__hp" title="Popularité encyclopédique">
+        <span class="pk-card__hp-label" aria-hidden="true">POP</span>
+        {% if discovered and card.auto_score %}{{ card.auto_score|floatformat:0 }}{% else %}?{% endif %}
+      </span>
+    </header>
+
+    <div class="pk-card__art">
+      {% if discovered and card.entity.image_url %}
+        <img src="{{ card.entity.image_url }}" alt="Photo de {{ card.entity.label_fr }}" loading="lazy">
+      {% else %}
+        <span class="pk-card__art-placeholder" aria-hidden="true">{% if discovered %}{{ card.entity.label_fr|slice:":1"|upper }}{% else %}?{% endif %}</span>
+      {% endif %}
+      <span class="pk-card__rarity">{{ rarity_name }}</span>
+      {% if badge == "new" %}
+        <span class="pk-card__flag pk-card__flag--new">Nouvelle</span>
+      {% elif badge == "dup" %}
+        <span class="pk-card__flag">Doublon{% if quantity > 1 %} ×{{ quantity }}{% endif %}</span>
+      {% elif discovered and quantity > 1 %}
+        <span class="pk-card__flag">×{{ quantity }}</span>
+      {% elif not discovered %}
+        <span class="pk-card__flag">À découvrir</span>
+      {% endif %}
+      <span class="pk-card__art-caption">
+        {% if discovered %}
+          {% with nat=card.entity.props.nationality club=card.entity.props.club capa=card.entity.props.capacity lieu=card.entity.props.location %}
+            {% if nat and not nat|is_qid %}{% with flag_url=nat|flag_img_url %}{% if flag_url %}<img class="pk-card__flag-img" src="{{ flag_url }}" alt="" loading="lazy" onerror="this.remove()">{% endif %}{% endwith %} {{ nat }}{% if club and not club|is_qid %} · {{ club }}{% endif %}{% elif club and not club|is_qid %}{{ club }}{% elif capa or lieu %}{% if capa %}{{ capa }} places{% endif %}{% if capa and lieu %} · {% endif %}{% if lieu %}{{ lieu }}{% endif %}{% else %}Football{% endif %}
+          {% endwith %}
+        {% else %}
+          Collection {{ card.collection.name }}
+        {% endif %}
+      </span>
+    </div>
+
+    <footer class="pk-card__foot">
+      <span class="pk-card__stat">Valeur {{ card.effective_sale_value }}</span>
+      <span class="pk-card__stat">{% if discovered %}Qté ×{{ quantity }}{% else %}Non possédée{% endif %}</span>
+      <span class="pk-card__num">N° {{ number|default:card.pk }}/{{ total|default:"?" }}</span>
+    </footer>
+    {% if discovered and card.entity.image_attribution %}
+      <p class="pk-card__attr">{{ card.entity.image_attribution|truncatechars:64 }}</p>
+    {% endif %}
+    {% if discovered and rarity_code == "rare" or discovered and rarity_code == "epic" or discovered and rarity_code == "legendary" %}
+      <div class="pk-card__holo" aria-hidden="true"></div>
+      <div class="pk-card__glare" aria-hidden="true"></div>
+    {% endif %}
+  </div>
+</article>
+{% endwith %}

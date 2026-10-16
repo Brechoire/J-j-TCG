@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maquettes du design — WikiCards</title>
+<link rel="stylesheet" href="../static/css/output.css">
+</head>
+<body class="min-h-dvh bg-canvas text-ink">
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:font-semibold">Aller au contenu</a>
+<main id="contenu" class="mx-auto w-full max-w-3xl px-4 py-8">
+  <header class="mb-8">
+    <p class="text-xs font-semibold uppercase tracking-widest text-ink-subtle">Design system · WikiCards</p>
+    <h1 class="mt-1 text-2xl font-extrabold tracking-tight">Maquettes du design</h1>
+    <p class="mt-2 text-sm text-ink-muted">
+      Pages statiques de référence (données factices) pour le jeu de collection WikiCards.
+      Spécifications complètes dans <code class="rounded bg-line px-1.5 py-0.5 text-xs">docs/DESIGN.md</code>.
+      Après modification : <code class="rounded bg-line px-1.5 py-0.5 text-xs">npm run build:css</code> puis rechargez.
+    </p>
+  </header>
+
+  <section aria-labelledby="grp-clair">
+    <h2 id="grp-clair" class="text-base font-bold">Parcours principal — ambiance « Encyclo » (clair)</h2>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <a href="accueil.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Accueil</h3>
+        <p class="mt-1 text-sm text-ink-muted">Hero, booster gratuit, progression d'album, derniers tirages.</p>
+      </a>
+      <a href="collections.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Collections</h3>
+        <p class="mt-1 text-sm text-ink-muted">Liste des thèmes, collection Football, thèmes à venir.</p>
+      </a>
+      <a href="collection-football.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Détail d'une collection</h3>
+        <p class="mt-1 text-sm text-ink-muted">Répartition du catalogue, progression par rareté, actions.</p>
+      </a>
+      <a href="album.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Album</h3>
+        <p class="mt-1 text-sm text-ink-muted">Filtres (recherche, raretés, découvertes/manquantes/doublons) et grille de cartes.</p>
+      </a>
+      <a href="carte.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Fiche carte</h3>
+        <p class="mt-1 text-sm text-ink-muted">Grande carte, informations encyclopédiques, attribution, revente.</p>
+      </a>
+      <a href="profil.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Profil</h3>
+        <p class="mt-1 text-sm text-ink-muted">Statistiques joueur, progression par rareté, activité récente.</p>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="grp-sombre" class="mt-8">
+    <h2 id="grp-sombre" class="text-base font-bold">Flux booster — ambiance « Boost » (sombre)</h2>
+    <p class="mt-1 text-sm text-ink-muted">Écrans immersifs sans navigation basse, avec sortie explicite.</p>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <a href="booster-ouverture.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Ouverture de booster</h3>
+        <p class="mt-1 text-sm text-ink-muted">État prêt et état cooldown (minuteur, achat direct).</p>
+      </a>
+      <a href="booster-revelation.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Révélation — écran signature</h3>
+        <p class="mt-1 text-sm text-ink-muted">Séquence 5 cartes au tap, « Tout révéler », récapitulatif, effets de rareté.</p>
+      </a>
+      <a href="booster-historique.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Historique des tirages</h3>
+        <p class="mt-1 text-sm text-ink-muted">Tirages passés, raretés obtenues, relecture, pagination.</p>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="grp-eco" class="mt-8">
+    <h2 id="grp-eco" class="text-base font-bold">Économie</h2>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <a href="inventaire.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Doublons (inventaire)</h3>
+        <p class="mt-1 text-sm text-ink-muted">Quantités, valeurs de revente, sélection multiple.</p>
+      </a>
+      <a href="vente.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Vente de doublons</h3>
+        <p class="mt-1 text-sm text-ink-muted">Quantité, montant recalculé, confirmation, état de succès.</p>
+      </a>
+      <a href="boutique.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Boutique</h3>
+        <p class="mt-1 text-sm text-ink-muted">Achat de booster 250 crédits, solde, état solde insuffisant.</p>
+      </a>
+    </div>
+  </section>
+
+  <section aria-labelledby="grp-comptes" class="mt-8">
+    <h2 id="grp-comptes" class="text-base font-bold">Comptes</h2>
+    <div class="mt-3 grid gap-3 sm:grid-cols-2">
+      <a href="auth-connexion.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Connexion</h3>
+        <p class="mt-1 text-sm text-ink-muted">Formulaire, état d'erreur accessible.</p>
+      </a>
+      <a href="auth-inscription.html" class="panel transition hover:border-line-strong">
+        <h3 class="font-bold">Inscription</h3>
+        <p class="mt-1 text-sm text-ink-muted">Création de compte, aide à la saisie, erreurs par champ.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer class="mt-10 border-t border-line pt-4 text-xs text-ink-subtle">
+    <p>Maquette statique — données factices. Photos : emplacements réservés ; l'application affichera les images Wikimedia Commons avec attribution.</p>
+    <p class="mt-1">Animations désactivées automatiquement si <code class="rounded bg-line px-1.5 py-0.5">prefers-reduced-motion: reduce</code>. Sans JavaScript, la révélation de booster s'affiche entièrement.</p>
+  </footer>
+</main>
+</body>
+</html>
